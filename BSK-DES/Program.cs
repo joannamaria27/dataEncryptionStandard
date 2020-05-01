@@ -37,6 +37,17 @@ namespace BSK_DES
                 49, 39, 56, 34, 53, 46,
                 42, 50, 36, 29, 32 };
 
+
+            int[] E = new int[] { 32, 1, 2, 3, 4, 5,
+                4, 5, 6, 7, 8, 9,
+                8, 9, 10, 11, 12, 13,
+                12, 13, 14, 15, 16, 17,
+                16, 17, 18, 19, 20, 21,
+                20, 21, 22, 23, 24, 25,
+                24, 25, 26, 27, 28, 29,
+                28, 29, 30, 31, 32, 1 };
+
+
             Console.WriteLine("DES!");
 
 
@@ -146,18 +157,23 @@ namespace BSK_DES
                         }
 
                     }
-                    char[,] tablicaPermutacjiKlucza2 = new char[16,56];
+                    char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
                     for (int i = 0; i < 16; i++)
                     {
-                        for (int j = 0; j < 56; j++)
+                        for (int j = 0; j < 48; j++)
                         {
                             pomocnicza = pc2[j];
-                            tablicaPermutacjiKlucza2[i,j] = K[i, pomocnicza - 1];
+                            tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
                         }
                     }
 
-
-
+                    ///8.
+                    char[] blokR8 = new char[48];
+                    for (int j = 0; j < 32; j++)
+                    {
+                        pomocnicza = E[j];
+                        blokR8[j] = blokR[pomocnicza - 1];
+                    }
 
 
 
