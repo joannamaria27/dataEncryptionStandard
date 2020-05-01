@@ -22,8 +22,8 @@ namespace BSK_DES
 
         public static char[] Xorowanie(char[] tablicaK, char[] tablicaR)
         {
-            char[] XOR = new char[48];
-            for (int i = 0; i < 48; i++)
+            char[] XOR = new char[tablicaK.Length];
+            for (int i = 0; i < tablicaK.Length; i++)
             {
                 if (tablicaK[i] == tablicaR[i])
                 {
@@ -143,15 +143,19 @@ namespace BSK_DES
 
         public static char[] Odczytywanie(int n, char[,] S, int[,] S1)
         {
-            char[] blok6bit = new char[6];
+            char[] blok4bit = new char[4];
             string wiersz = S[n, 0] + "" + S[n, 5]; //11.
             string kolumna = S[n, 1] + "" + S[n, 2] + "" + S[n, 3] + "" + S[n, 4]; //11.
             int w = Convert.ToInt32(wiersz, 2); //11.
             int k = Convert.ToInt32(kolumna, 2); //11.
             string l = Convert.ToString(S1[w, k], 2);  //12.
-            for (int j = 0; j < 6; j++)
-                blok6bit[j] = l[j];
-            return blok6bit;
+            while(l.Length<4)
+            {
+                l = "0" + l;
+            }
+            for (int j = 0; j < 4; j++)
+                blok4bit[j] = l[j]; 
+            return blok4bit;
         }
 
         public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2)
@@ -164,7 +168,7 @@ namespace BSK_DES
             {
                 tablicaK[i] = tablicaPermutacjiKlucza2[0, i];
             }
-            char[] tablicaXOR = Xorowanie(tablicaK, blokR);
+            char[] tablicaXOR = Xorowanie(tablicaK, blokR8);
 
             //10.
             int p = 0;
@@ -264,7 +268,8 @@ namespace BSK_DES
                 case 1:
 
                     ////////////////////////wprowadzenie liczb - narazie ręcznie 64 zera i jednynki
-                    ///1234567890111111111111111111111111111111111111111111111111111111
+                    ///1111111111111111111111111111111111111111111111111111111111111111
+                    ///
                     Console.WriteLine("KODOWANIE");
                     Console.WriteLine("Wprowadz 64 bitowy tekst binarniy: ");
                     string tekstJawny = Console.ReadLine();
@@ -338,6 +343,7 @@ namespace BSK_DES
                             tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
                         }
                     }
+
                     /////////////////////////////////////////
                     /// 8-16. 
                     char[,] ril0 = RiL(blokR, blokL, tablicaPermutacjiKlucza2);
@@ -364,7 +370,7 @@ namespace BSK_DES
                     {
                         koniec[i] = ril16[0, i];
                     }
-                    int d = 0;
+                    int d = 32;
                     for (int i = 0; i < 32; i++)
                     {
                         koniec[d++] = ril16[1, i];
@@ -372,6 +378,7 @@ namespace BSK_DES
 
                     char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
 
+                    Console.WriteLine(koniecPer);
                     break;
             }
 
