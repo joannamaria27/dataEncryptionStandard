@@ -129,7 +129,7 @@ namespace BSK_DES
                                                       35,  3, 43, 11, 51, 19, 59, 27,
                                                       34,  2, 42, 10, 50, 18, 58, 26,
                                                       33,  1, 41,  9, 49, 17, 57, 25 };
-         
+
         public static char[] Dzielenie(char[] tablica, int rozmiar, int kolejne)
         {
             char[] blok = new char[rozmiar];
@@ -149,16 +149,16 @@ namespace BSK_DES
             int w = Convert.ToInt32(wiersz, 2); //11.
             int k = Convert.ToInt32(kolumna, 2); //11.
             string l = Convert.ToString(S1[w, k], 2);  //12.
-            while(l.Length<4)
+            while (l.Length < 4)
             {
                 l = "0" + l;
             }
             for (int j = 0; j < 4; j++)
-                blok4bit[j] = l[j]; 
+                blok4bit[j] = l[j];
             return blok4bit;
         }
 
-        public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2)
+        public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2, int numer)
         {
             char[,] rl = new char[2, 32];
             char[] blokR8 = Permutacja(blokR, E); //8.
@@ -166,7 +166,7 @@ namespace BSK_DES
             char[] tablicaK = new char[48];
             for (int i = 0; i < 48; i++)
             {
-                tablicaK[i] = tablicaPermutacjiKlucza2[0, i];
+                tablicaK[i] = tablicaPermutacjiKlucza2[numer, i];
             }
             char[] tablicaXOR = Xorowanie(tablicaK, blokR8);
 
@@ -225,13 +225,13 @@ namespace BSK_DES
             {
                 ciagR[r++] = i;
             }
-
-            char[] RPermutacja = Permutacja(ciagR, P); //14.
-
+            
+            char[] RPermutacja = Permutacja(ciagR, P); //14.V
+            //tu tzreba sprawdzić
             //xor Ln-1 Rn-1
-
+            //
             char[] blokRn = Xorowanie(RPermutacja, blokL); //15.
-            char[] blokLn = RPermutacja; //16.
+            char[] blokLn = blokR; //16.
             for (int i = 0; i < 32; i++)
             {
                 rl[0, i] = blokRn[i];
@@ -240,7 +240,7 @@ namespace BSK_DES
 
             return rl;
         }
-        public static char[,] Laczenie(char[,] ril, char[,] tablicaPermutacjiKlucza2) 
+        public static char[,] Laczenie(char[,] ril, char[,] tablicaPermutacjiKlucza2,int numer)
         {
             char[] blokRn = new char[32];
             char[] blokLn = new char[32];
@@ -249,7 +249,7 @@ namespace BSK_DES
                 blokLn[i] = ril[0, i];
                 blokRn[i] = ril[1, i];
             }
-            char[,] riln = RiL(blokRn, blokLn, tablicaPermutacjiKlucza2);
+            char[,] riln = RiL(blokLn, blokRn, tablicaPermutacjiKlucza2,numer);
             return riln;
         }
 
@@ -268,8 +268,10 @@ namespace BSK_DES
                 case 1:
 
                     ////////////////////////wprowadzenie liczb - narazie ręcznie 64 zera i jednynki
-                    ///1111111111111111111111111111111111111111111111111111111111111111
-                    ///
+                    //  0101010101100000010010100000111010000110010100000010111100111110
+
+
+
                     Console.WriteLine("KODOWANIE");
                     Console.WriteLine("Wprowadz 64 bitowy tekst binarniy: ");
                     string tekstJawny = Console.ReadLine();
@@ -290,30 +292,32 @@ namespace BSK_DES
                     }
 
                     char[] tablicaPermutacji = Permutacja(tablicaPoczatkowa, ip); //2.
-                    char[] blokR = Dzielenie(tablicaPermutacji, 32, 0); //3.
-                    char[] blokL = Dzielenie(tablicaPermutacji, 32, 32); //3.
+                    char[] blokL = Dzielenie(tablicaPermutacji, 32, 0); //3.
+                    char[] blokP = Dzielenie(tablicaPermutacji, 32, 32); //3.
 
                     //klucz 4 -7 
 
                     char[] tablicaPermutacjiKlucza = Permutacja(tablicaPoczatkowaKlucz, pc); //4.
-                    char[] kluczC = Dzielenie(tablicaPermutacji, 28, 0); //5.
-                    char[] kluczD = Dzielenie(tablicaPermutacji, 28, 28); //5.
+                    char[] kluczC = Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
+                    char[] kluczD = Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
 
                     //6.
                     List<char> kluczC6 = new List<char>(kluczC);
                     List<char> kluczD6 = new List<char>(kluczD);
-                    char[,] kluczeCpo6 = new char[16, 28];
-                    char[,] kluczeDpo6 = new char[16, 28];
+                    char[,] kluczeCpo6 = new char[16,28];
+                    char[,] kluczeDpo6 = new char[16,28];
                     for (int i = 0; i < 16; i++)
                     {
+                        kluczC6.AddRange(kluczC6.GetRange(0, przesuniecie6[i]));
+                        kluczC6.RemoveRange(0, przesuniecie6[i]);
+
+                        kluczD6.AddRange(kluczD6.GetRange(0, przesuniecie6[i]));
+                        kluczD6.RemoveRange(0, przesuniecie6[i]);
+
                         for (int j = 0; j < 28; j++)
                         {
-                            kluczC6.AddRange(kluczC6.GetRange(0, przesuniecie6[i]));
-                            kluczC6.RemoveRange(0, przesuniecie6[i]);
-                            kluczeCpo6[i, j] = kluczC6[j];
-                            kluczD6.AddRange(kluczD6.GetRange(0, przesuniecie6[i]));
-                            kluczD6.RemoveRange(0, przesuniecie6[i]);
-                            kluczeDpo6[i, j] = kluczD6[j];
+                            kluczeCpo6[i,j] = kluczC6[j];
+                            kluczeDpo6[i,j] = kluczD6[j];
                         }
                     }
 
@@ -346,34 +350,35 @@ namespace BSK_DES
 
                     /////////////////////////////////////////
                     /// 8-16. 
-                    char[,] ril0 = RiL(blokR, blokL, tablicaPermutacjiKlucza2);
-                    char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril3 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril4 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril5 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril6 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril7 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril8 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril9 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril10 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril11 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril12 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril13 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril14 = Laczenie(ril1, tablicaPermutacjiKlucza2);
-                    char[,] ril15 = Laczenie(ril0, tablicaPermutacjiKlucza2);
-                    char[,] ril16 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    /// //bład w blokach L R
+                    char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2,0);
+                    char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2,1);
+                    char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2,2);
+                    char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2,3);
+                    char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2,4);
+                    char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2,5);
+                    char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2,6);
+                    char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2,7);
+                    char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2,8);
+                    char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2,9);
+                    char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2,10);
+                    char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2,11);
+                    char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2,12);
+                    char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2,13);
+                    char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2,14);
+                    char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2,15);
+
 
                     //17.
                     char[] koniec = new char[64];
-                    for (int i=0;i<32;i++)
+                    for (int i = 0; i < 32; i++)
                     {
-                        koniec[i] = ril16[0, i];
+                        koniec[i] = ril15[0, i];
                     }
                     int d = 32;
                     for (int i = 0; i < 32; i++)
                     {
-                        koniec[d++] = ril16[1, i];
+                        koniec[d++] = ril15[1, i];
                     }
 
                     char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
