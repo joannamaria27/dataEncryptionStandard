@@ -175,7 +175,30 @@ namespace BSK_DES
                         blokR8[j] = blokR[pomocnicza - 1];
                     }
 
+                    //9. xor k1 i r0
 
+                    char[] Xorowanie(char[] tablicaK, char[] tablicaR)
+                    {
+                        char[] XOR = new char[48];
+                        for (int i = 0; i < 48; i++)
+                        {
+                            if(tablicaK[i]==tablicaR[i])
+                            {
+                                XOR[i]= '0';
+                            }
+                            else
+                            {
+                                XOR[i] = '1';
+                            }
+                        }
+                        return XOR;
+                    }
+                    char[] tablicaK = new char [48];
+                    for (int i = 0; i < 48; i++)
+                    {
+                        tablicaK[i] = tablicaPermutacjiKlucza2[0,i];
+                    }
+                    char[] tablicaXOR = Xorowanie(tablicaK, blokR);
 
 
 
