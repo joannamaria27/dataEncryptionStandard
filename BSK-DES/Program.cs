@@ -302,11 +302,10 @@ namespace BSK_DES
                     }
 
                     char[] RPermutacja = Permutacja(ciagR, P); //14.
-
-                    //15.
+                                        
                     //xor Ln-1 Rn-1
-                    char[] tablicaXORLR = Xorowanie(RPermutacja, blokL);
-
+                    char[] bolkRn = Xorowanie(RPermutacja, blokL); //15.
+                    char[] bolkLn = RPermutacja; //16.
 
 
 
