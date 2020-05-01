@@ -370,7 +370,7 @@ namespace BSK_DES
                         koniec[d++] = ril16[1, i];
                     }
 
-                    
+                    char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
 
                     break;
             }
