@@ -121,6 +121,15 @@ namespace BSK_DES
 
         public static int[] P = new int[32] { 16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31, 10, 2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 30, 6, 22, 11, 4, 25 };
 
+        public static int[] IP1minus1 = new int[64] { 40,  8, 48, 16, 56, 24, 64, 32,
+                                                      39,  7, 47, 15, 55, 23, 63, 31,
+                                                      38,  6, 46, 14, 54, 22, 62, 30,
+                                                      37,  5, 45, 13, 53, 21, 61, 29,
+                                                      36,  4, 44, 12, 52, 20, 60, 28,
+                                                      35,  3, 43, 11, 51, 19, 59, 27,
+                                                      34,  2, 42, 10, 50, 18, 58, 26,
+                                                      33,  1, 41,  9, 49, 17, 57, 25 };
+         
         public static char[] Dzielenie(char[] tablica, int rozmiar, int kolejne)
         {
             char[] blok = new char[rozmiar];
@@ -143,6 +152,101 @@ namespace BSK_DES
             for (int j = 0; j < 6; j++)
                 blok6bit[j] = l[j];
             return blok6bit;
+        }
+
+        public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2)
+        {
+            char[,] rl = new char[2, 32];
+            char[] blokR8 = Permutacja(blokR, E); //8.
+                                                  //9. xor Kn, Rn-1
+            char[] tablicaK = new char[48];
+            for (int i = 0; i < 48; i++)
+            {
+                tablicaK[i] = tablicaPermutacjiKlucza2[0, i];
+            }
+            char[] tablicaXOR = Xorowanie(tablicaK, blokR);
+
+            //10.
+            int p = 0;
+            char[,] S = new char[8, 6];
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    S[i, j] = tablicaXOR[p]; p++;
+                }
+            }
+
+            char[] ciag6bit1 = Odczytywanie(0, S, S1); //11-12.
+            char[] ciag6bit2 = Odczytywanie(1, S, S2);
+            char[] ciag6bit3 = Odczytywanie(2, S, S3);
+            char[] ciag6bit4 = Odczytywanie(3, S, S4);
+            char[] ciag6bit5 = Odczytywanie(4, S, S5);
+            char[] ciag6bit6 = Odczytywanie(5, S, S6);
+            char[] ciag6bit7 = Odczytywanie(6, S, S7);
+            char[] ciag6bit8 = Odczytywanie(7, S, S8);
+
+            //13.
+            char[] ciagR = new char[32];
+            int r = 0;
+            foreach (char i in ciag6bit1)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit2)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit3)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit4)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit5)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit6)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit7)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit8)
+            {
+                ciagR[r++] = i;
+            }
+
+            char[] RPermutacja = Permutacja(ciagR, P); //14.
+
+            //xor Ln-1 Rn-1
+
+            char[] blokRn = Xorowanie(RPermutacja, blokL); //15.
+            char[] blokLn = RPermutacja; //16.
+            for (int i = 0; i < 32; i++)
+            {
+                rl[0, i] = blokRn[i];
+                rl[1, i] = blokLn[i];
+            }
+
+            return rl;
+        }
+        public static char[,] Laczenie(char[,] ril, char[,] tablicaPermutacjiKlucza2) 
+        {
+            char[] blokRn = new char[32];
+            char[] blokLn = new char[32];
+            for (int i = 0; i < 32; i++)
+            {
+                blokLn[i] = ril[0, i];
+                blokRn[i] = ril[1, i];
+            }
+            char[,] riln = RiL(blokRn, blokLn, tablicaPermutacjiKlucza2);
+            return riln;
         }
 
 
@@ -185,6 +289,7 @@ namespace BSK_DES
                     char[] blokL = Dzielenie(tablicaPermutacji, 32, 32); //3.
 
                     //klucz 4 -7 
+
                     char[] tablicaPermutacjiKlucza = Permutacja(tablicaPoczatkowaKlucz, pc); //4.
                     char[] kluczC = Dzielenie(tablicaPermutacji, 28, 0); //5.
                     char[] kluczD = Dzielenie(tablicaPermutacji, 28, 28); //5.
@@ -233,85 +338,39 @@ namespace BSK_DES
                             tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
                         }
                     }
+                    /////////////////////////////////////////
+                    /// 8-16. 
+                    char[,] ril0 = RiL(blokR, blokL, tablicaPermutacjiKlucza2);
+                    char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril3 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril4 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril5 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril6 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril7 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril8 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril9 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril10 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril11 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril12 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril13 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril14 = Laczenie(ril1, tablicaPermutacjiKlucza2);
+                    char[,] ril15 = Laczenie(ril0, tablicaPermutacjiKlucza2);
+                    char[,] ril16 = Laczenie(ril1, tablicaPermutacjiKlucza2);
 
-
-
-                    char[] blokR8 = Permutacja(blokR, E); //8.
-                    //9. xor Kn, Rn-1
-                    char[] tablicaK = new char[48];
-                    for (int i = 0; i < 48; i++)
+                    //17.
+                    char[] koniec = new char[64];
+                    for (int i=0;i<32;i++)
                     {
-                        tablicaK[i] = tablicaPermutacjiKlucza2[0, i];
+                        koniec[i] = ril16[0, i];
                     }
-                    char[] tablicaXOR = Xorowanie(tablicaK, blokR);
-
-                    //10.
-                    int p = 0;
-                    char[,] S = new char[8, 6];
-                    for (int i = 0; i < 8; i++)
+                    int d = 0;
+                    for (int i = 0; i < 32; i++)
                     {
-                        for (int j = 0; j < 6; j++)
-                        {
-                            S[i, j] = tablicaXOR[p]; p++;
-                        }
-                    }
-
-                    char[] ciag6bit1 = Odczytywanie(0, S, S1); //11-12.
-                    char[] ciag6bit2 = Odczytywanie(1, S, S2);
-                    char[] ciag6bit3 = Odczytywanie(2, S, S3);
-                    char[] ciag6bit4 = Odczytywanie(3, S, S4);
-                    char[] ciag6bit5 = Odczytywanie(4, S, S5);
-                    char[] ciag6bit6 = Odczytywanie(5, S, S6);
-                    char[] ciag6bit7 = Odczytywanie(6, S, S7);
-                    char[] ciag6bit8 = Odczytywanie(7, S, S8);
-
-                    //13.
-                    char[] ciagR = new char[32];
-                    int r = 0;
-                    foreach (char i in ciag6bit1)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit2)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit3)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit4)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit5)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit6)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit7)
-                    {
-                        ciagR[r++] = i;
-                    }
-                    foreach (char i in ciag6bit8)
-                    {
-                        ciagR[r++] = i;
+                        koniec[d++] = ril16[1, i];
                     }
 
-                    char[] RPermutacja = Permutacja(ciagR, P); //14.
-                                        
-                    //xor Ln-1 Rn-1
-                    char[] bolkRn = Xorowanie(RPermutacja, blokL); //15.
-                    char[] bolkLn = RPermutacja; //16.
-
-
-
-
-
-
+                    
 
                     break;
             }
