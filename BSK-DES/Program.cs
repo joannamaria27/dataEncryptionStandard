@@ -48,7 +48,10 @@ namespace BSK_DES
                 28, 29, 30, 31, 32, 1 };
 
 
-            int[] S1 = new int[] { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7, 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8, 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0, 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 };
+            int[,] S1 = new int[4, 16] { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
+           {     0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8 },
+           {     4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
+           {     15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } };
             int[] S2 = new int[] { 15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10, 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5, 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 };
             int[] S3 = new int[] { 10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8, 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1, 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7, 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 };
             int[] S4 = new int[] { 7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15, 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9, 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4, 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14 };
@@ -233,10 +236,36 @@ namespace BSK_DES
                     string wiersz6 = S[5, 0] + "" + S[5, 5];
                     string kolumna6 = S[5, 1] + "" + S[5, 2] + "" + S[5, 3] + "" + S[5, 4];
 
-                    
+
+                    int w1 = Convert.ToInt32(wiersz1, 2);
+                    int k1 = Convert.ToInt32(kolumna1, 2);
+                    int w2 = Convert.ToInt32(wiersz2, 2);
+                    int k2 = Convert.ToInt32(kolumna2, 2);
+                    int w3 = Convert.ToInt32(wiersz3, 2);
+                    int k3 = Convert.ToInt32(kolumna3, 2);
+                    int w4 = Convert.ToInt32(wiersz4, 2);
+                    int k4 = Convert.ToInt32(kolumna4, 2);
+                    int w5 = Convert.ToInt32(wiersz5, 2);
+                    int k5 = Convert.ToInt32(kolumna5, 2);
+                    int w6 = Convert.ToInt32(wiersz6, 2);
+                    int k6 = Convert.ToInt32(kolumna6, 2);
+
+                    //12.
+
+                    char[,] S6bitowe = new char[8, 6];
+                    string l1 = Convert.ToString(S1[w1, k1], 2);
+                    string l2 = Convert.ToString(S1[w2, k2], 2);
+                    string l3 = Convert.ToString(S1[w3, k3], 2);
+                    string l4 = Convert.ToString(S1[w4, k4], 2);
+                    string l5 = Convert.ToString(S1[w5, k5], 2);
+                    string l6 = Convert.ToString(S1[w6, k6], 2);
 
 
-
+                    for (int j = 0; j < 6; j++)
+                    {
+                        pomocnicza = S1[j];
+                        S6bitowe[0, j] = blokR[pomocnicza - 1];
+                    }
 
 
 
