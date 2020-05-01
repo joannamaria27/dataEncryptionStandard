@@ -132,6 +132,20 @@ namespace BSK_DES
             return blok;
         }
 
+        public static char[] Odczytywanie(int n, char[,] S, int[,] S1)
+        {
+            char[] blok6bit = new char[6];
+            string wiersz = S[n, 0] + "" + S[n, 5]; //11.
+            string kolumna = S[n, 1] + "" + S[n, 2] + "" + S[n, 3] + "" + S[n, 4]; //11.
+            int w = Convert.ToInt32(wiersz, 2); //11.
+            int k = Convert.ToInt32(kolumna, 2); //11.
+            string l = Convert.ToString(S1[w, k], 2);  //12.
+            for (int j = 0; j < 6; j++)
+                blok6bit[j] = l[j];
+            return blok6bit;
+        }
+
+
         static void Main(string[] args)
         {
 
@@ -223,7 +237,7 @@ namespace BSK_DES
 
 
                     char[] blokR8 = Permutacja(blokR, E); //8.
-                    //9. xor 
+                    //9. xor Kn, Rn-1
                     char[] tablicaK = new char[48];
                     for (int i = 0; i < 48; i++)
                     {
@@ -241,77 +255,57 @@ namespace BSK_DES
                             S[i, j] = tablicaXOR[p]; p++;
                         }
                     }
-                    //11.
-                    string wiersz1 = S[0, 0] + "" + S[0, 5];
-                    string kolumna1 = S[0, 1] + "" + S[0, 2] + "" + S[0, 3] + "" + S[0, 4];
-                    string wiersz2 = S[1, 0] + "" + S[1, 5];
-                    string kolumna2 = S[1, 1] + "" + S[1, 2] + "" + S[1, 3] + "" + S[1, 4];
-                    string wiersz3 = S[2, 0] + "" + S[2, 5];
-                    string kolumna3 = S[2, 1] + "" + S[2, 2] + "" + S[2, 3] + "" + S[2, 4];
-                    string wiersz4 = S[3, 0] + "" + S[3, 5];
-                    string kolumna4 = S[3, 1] + "" + S[3, 2] + "" + S[3, 3] + "" + S[3, 4];
-                    string wiersz5 = S[4, 0] + "" + S[4, 5];
-                    string kolumna5 = S[4, 1] + "" + S[4, 2] + "" + S[4, 3] + "" + S[4, 4];
-                    string wiersz6 = S[5, 0] + "" + S[5, 5];
-                    string kolumna6 = S[5, 1] + "" + S[5, 2] + "" + S[5, 3] + "" + S[5, 4];
 
-
-                    int w1 = Convert.ToInt32(wiersz1, 2);
-                    int k1 = Convert.ToInt32(kolumna1, 2);
-                    int w2 = Convert.ToInt32(wiersz2, 2);
-                    int k2 = Convert.ToInt32(kolumna2, 2);
-                    int w3 = Convert.ToInt32(wiersz3, 2);
-                    int k3 = Convert.ToInt32(kolumna3, 2);
-                    int w4 = Convert.ToInt32(wiersz4, 2);
-                    int k4 = Convert.ToInt32(kolumna4, 2);
-                    int w5 = Convert.ToInt32(wiersz5, 2);
-                    int k5 = Convert.ToInt32(kolumna5, 2);
-                    int w6 = Convert.ToInt32(wiersz6, 2);
-                    int k6 = Convert.ToInt32(kolumna6, 2);
-
-                    //12.
-
-                    char[,] S6bitowe = new char[8, 6];
-                    string l1 = Convert.ToString(S1[w1, k1], 2);
-                    string l2 = Convert.ToString(S1[w2, k2], 2);
-                    string l3 = Convert.ToString(S1[w3, k3], 2);
-                    string l4 = Convert.ToString(S1[w4, k4], 2);
-                    string l5 = Convert.ToString(S1[w5, k5], 2);
-                    string l6 = Convert.ToString(S1[w6, k6], 2);
-
-
-                    for (int j = 0; j < 6; j++)
-                    {
-                        S6bitowe[0, j] = l1[j];
-                        S6bitowe[1, j] = l2[j];
-                        S6bitowe[2, j] = l3[j];
-                        S6bitowe[3, j] = l4[j];
-                        S6bitowe[4, j] = l5[j];
-                        S6bitowe[5, j] = l6[j];
-
-                    }
+                    char[] ciag6bit1 = Odczytywanie(0, S, S1); //11-12.
+                    char[] ciag6bit2 = Odczytywanie(1, S, S2);
+                    char[] ciag6bit3 = Odczytywanie(2, S, S3);
+                    char[] ciag6bit4 = Odczytywanie(3, S, S4);
+                    char[] ciag6bit5 = Odczytywanie(4, S, S5);
+                    char[] ciag6bit6 = Odczytywanie(5, S, S6);
+                    char[] ciag6bit7 = Odczytywanie(6, S, S7);
+                    char[] ciag6bit8 = Odczytywanie(7, S, S8);
 
                     //13.
                     char[] ciagR = new char[32];
-
-
                     int r = 0;
-                    foreach (char i in S6bitowe)
+                    foreach (char i in ciag6bit1)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit2)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit3)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit4)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit5)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit6)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit7)
+                    {
+                        ciagR[r++] = i;
+                    }
+                    foreach (char i in ciag6bit8)
                     {
                         ciagR[r++] = i;
                     }
 
-                    //14.
-                    char[] RPermutacja = new char[48];
-                    for (int i = 0; i < 48; i++)
-                    {
-                        pomocnicza = P[i];
-                        RPermutacja[i] = ciagR[pomocnicza - 1];
-                    }
+                    char[] RPermutacja = Permutacja(ciagR, P); //14.
 
                     //15.
-
-
+                    //xor Ln-1 Rn-1
+                    char[] tablicaXORLR = Xorowanie(RPermutacja, blokL);
 
 
 
