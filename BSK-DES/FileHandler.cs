@@ -48,7 +48,7 @@ namespace BSK_DES {
 			return Encoding.ASCII.GetString(byteList.ToArray());
 		}
 
-		private static string AdjustStringTo64(string text) {
+		public static string AdjustStringTo64(string text) {
 
 			int length = text.Length;
 			int base64, new64, addedBits = 0;

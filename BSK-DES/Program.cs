@@ -255,30 +255,39 @@ namespace BSK_DES
 
         static void Main(string[] args)
         {
-            FileHandler.ReadFromTextFile("input.txt");
+            //FileHandler.ReadFromTextFile("input.txt");
             //FileHandler.ReadFromBinFile("cat.jpg");
 
-            Console.WriteLine("DES!");
-
-
+            Console.WriteLine("halo!");
             Console.WriteLine("Menu\n 1-KODOWANIE\n 2-ODKODOWANIE");
+
             int wybor = int.Parse(Console.ReadLine());
             switch (wybor)
             {
                 case 1:
                     {
-                        ////////////////////////wprowadzenie liczb - narazie ręcznie 64 zera i jednynki
+                        string tekstJawny = "";
+                        Console.WriteLine("KODOWANIE");
+
+                        Console.WriteLine("Podaj nazwę z rozszezenie do odczytu\n");
+                        string plikb = Console.ReadLine();
+                        tekstJawny = FileHandler.ReadFromBinFile(plikb);
+
+                        Console.WriteLine("Podaj plik txt do odczytu klucza\n");
+                        string plikk = Console.ReadLine();
+                        string klucz = FileHandler.ReadFromTextFile(plikk);
+
+
+                        //0010010010110011001000100000001010001011000011110101101110111100
 
                         //0101010101100000010010100000111010000110010100000010111100111110 -- testowy klucz i tekst //0101000110011010001110100111101100100000111101110100111000110111 -- dobry wynik
                         //                                                                                          //
                         //1101011000011011000000110010100000001001110000001010000010100001
                         //
-                        Console.WriteLine("KODOWANIE");
-                        Console.WriteLine("Wprowadz 64 bitowy tekst binarniy: ");
-                        string tekstJawny = Console.ReadLine();
-                        Console.WriteLine("Wprowadz 64 bitowy klucz binarniy: ");
-                        string klucz = Console.ReadLine();
-                        ////////////////////////podzielenie na bloki 64 bitowe - narazie tylko jeden blok wprowadzany jest
+
+                        FileHandler.AdjustStringTo64(tekstJawny);
+                        string[,] tablica64;
+                     
 
 
                         char[] tablicaPoczatkowa = new char[64];
