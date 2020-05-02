@@ -25,16 +25,12 @@ namespace BSK_DES
 
                         Console.WriteLine("Podaj plik txt do odczytu klucza: ");
                         string plikk = Console.ReadLine();
-                        string klucz = FileHandler.ReadFromTextFile(plikk);
+                        string klucz = FileHandler.ReadFromTextFile1(plikk);
 
                         while (klucz.Length < 64) ///hmmm??
                         {
                             klucz = "0" + klucz;
-                        }/*
-                        while (tekstJawny.Length % 64 !=0) ///hmmm??
-                        {
-                            klucz = "0" + klucz;
-                        }*/
+                        }
 
                         char[] tablicaPoczatkowa = new char[64];
                         char[] tablicaPoczatkowaKlucz = new char[64];
@@ -152,7 +148,8 @@ namespace BSK_DES
                                 Console.Write("\n");
                             }
                             Console.WriteLine("-----------------------------------------------");
-                            Console.WriteLine("TEKST POCZATKOWY: " + tablicaPoczatkowa);
+                            Console.Write("TEKST POCZATKOWY: ");
+                            Console.WriteLine(tablicaPoczatkowa);
                             /////////////////////////////////////////
                             /// 8-16. 
                             char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
@@ -189,10 +186,10 @@ namespace BSK_DES
                             string str = new string(koniecPer);
                             Console.Write("TEKST WYJSCIOWY (BIN): " + str);
 
-                            string wyjscie = FileHandler.BinaryStringToHexString(str);
+                            string wyjscie = FileHandler.BinaryToString(str);
                             Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
-                            File.WriteAllText(@"zakodowane.txt", wyjscie);
-
+                            //File.WriteAllText(@"zakodowane.txt", wyjscie);
+                            File.AppendAllText(@"z.txt", wyjscie);
                         }
                         break;
                     }
@@ -204,22 +201,15 @@ namespace BSK_DES
 
                         Console.WriteLine("Podaj nazwę z rozszezenie do odczytu: ");
                         string plikb = Console.ReadLine();
-                        tekstZakodowany = FileHandler.ReadFromTextFile(plikb); //zm
+                        tekstZakodowany = FileHandler.ReadFromTextFile1(plikb); //zm
 
                         Console.WriteLine("Podaj plik txt do odczytu klucza: ");
                         string plikk = Console.ReadLine();
-                        string klucz = FileHandler.ReadFromTextFile(plikk);
-                        while (tekstZakodowany.Length < 64) //zm
-                        {
-                            tekstZakodowany = "0" + tekstZakodowany;
-                        }
-                        while (klucz.Length < 64)
-                        {
-                            klucz = "0" + klucz;
-                        }
+                        string klucz = FileHandler.ReadFromTextFile1(plikk);
+                        
                         char[] tablicaPoczatkowa = new char[64];
                         char[] tablicaPoczatkowaKlucz = new char[64];
-
+                        string ostatnie = "";
                         int m = 0;
                         for (int a = 0; a < tekstZakodowany.Length / 64; a++)
                         {
@@ -366,24 +356,40 @@ namespace BSK_DES
 
                             char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
 
-
-                            string str = new string(koniecPer);
+                            //ostatnie = koniecPer;
+                            // string str = new string(koniecPer);
                             // usuniecie nadmiaru
-                           
-                            if (FileHandler.flaga == true)
-                            {
-                                string liczba = str.Substring(str.Length - 8, 8);
-                                int licz = Convert.ToInt32(liczba);
-                                str = str.Remove(str.Length - licz);
-                            }
-                            Console.Write("TEKST WYJSCIOWY (BIN): " + str);
 
-                            string wyjscie = FileHandler.BinaryStringToHexString(str);
-                            Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
-                            File.WriteAllText(@"odkodowane.txt", wyjscie);
+                            string str1 = new string(koniecPer);
+                            ostatnie += str1;
+
+                            Console.Write("TEKST WYJSCIOWY (BIN): " + str1);
+
+                            string wyjscie1 = FileHandler.BinaryToString(str1);
+                            
+                            Console.WriteLine("--------------------------------");
+                            File.AppendAllText(@"d.txt", " " + wyjscie1);
+                            //File.WriteAllText(@"odkodowane.txt", wyjscie);
 
                         }
+                        
+                        
+                        
+                        string liczba = ostatnie.Substring(ostatnie.Length - 8, 8);
+                        int licz = Convert.ToInt32(liczba, 2);
+                        ostatnie = ostatnie.Remove(ostatnie.Length - (licz + 8));
+                        string wyjscie = FileHandler.StringToBinary(ostatnie);
+                        File.WriteAllText(@"d.txt", wyjscie);
+                        /*           ;
+                                   string liczba = str.Substring(str.Length - 8, 8);
+                                   int licz = Convert.ToInt32(liczba, 2);
+                                   str = str.Remove(str.Length - (licz + 8));
 
+                                   Console.Write("TEKST WYJSCIOWY (BIN): " + str);
+
+                                   string wyjscie = FileHandler.BinaryStringToHexString(str);
+                                   Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
+                                   File.WriteAllText(@"odkodowane.txt", wyjscie);*/
                         break;
                     }
             }

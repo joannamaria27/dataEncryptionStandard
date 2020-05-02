@@ -9,23 +9,20 @@ namespace BSK_DES
     {
 
         // 0011000000110001001100100011001100110100001101010011011000110111 - 64 bits 01234567
-        public static Boolean flaga = false;
-        public static string ReadFromTextFile(string path) ///obsługa błędów kiedy zła nazwa + kiedy zła długosc klucza
-        {
-            string text = File.ReadAllText(path);
-            Console.WriteLine("-----------------------------------------------");
-            Console.WriteLine("KLUCZ POCZATKOWY: " + text);
-          
-            text = hex2binary(text);
-            //text = AdjustStringTo64(text);
-            return text;
-        }
 
         public static string ReadFromTextFile2(string path)  ///obsługa błędów kiedy zła nazwa + kiedy zła długosc klucza
         {
             string text = File.ReadAllText(path);
-            text = hex2binary(text);
+            text = StringToBinary(text);
             text = AdjustStringTo64(text);
+            return text;
+        }
+
+        public static string ReadFromTextFile1(string path)
+        {
+            string text = File.ReadAllText(path);
+            text = StringToBinary(text);
+           // text = AdjustStringTo64(text);
             return text;
         }
 
@@ -46,7 +43,7 @@ namespace BSK_DES
             return output;
         }
 
-        private static string StringToBinary(string data)
+        public static string StringToBinary(string data)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -68,41 +65,39 @@ namespace BSK_DES
             return Encoding.ASCII.GetString(byteList.ToArray());
         }
 
-        public static string AdjustStringTo64(string text) {
+        private static string AdjustStringTo64(string text)
+        {
 
-			int length = text.Length;
-			int base64, new64, addedBits = 0;
-			StringBuilder stringBuilder = new StringBuilder(text);
-			if(length % 64 != 0) {
-                flaga = true;
-				base64 = length / 64;
-                if(base64==0)
+            int length = text.Length;
+            int base64, new64, addedBits = 0;
+            StringBuilder stringBuilder = new StringBuilder(text);
+            if (length % 64 != 0)
+            {
+                base64 = length / 64;
+                new64 = base64 * 64 + 64;
+                for (int i = length; i < new64 - 8; i++)
                 {
-                    new64 = 64 + 64;
-
+                    stringBuilder.Append("0");
+                    addedBits++;
                 }
-                else
-				new64 = base64*64 + 64;
-				for(int i = length; i < new64 - 8; i++) {
-					stringBuilder.Append("0");
-					addedBits++;
-				}
-				stringBuilder.Append(StringToBinary(((addedBits/8)+1).ToString()));
+                stringBuilder.Append(StringToBinary(((addedBits / 8) + 1).ToString()));
 
-			}
-			/*else {
-				for (int i = 0; i < 56; i++) {
-					stringBuilder.Append("0");
-					addedBits++;
-				}
-				stringBuilder.Append(StringToBinary(8.ToString()));
-			}*/
+            }
+            else
+            {
+                for (int i = 0; i < 56; i++)
+                {
+                    stringBuilder.Append("0");
+                    addedBits++;
+                }
+                stringBuilder.Append(StringToBinary(8.ToString()));
+            }
 
-			return stringBuilder.ToString();
+            return stringBuilder.ToString();
         }
-        
 
-    public static string BinaryStringToHexString(string binary)
+
+        public static string BinaryStringToHexString(string binary)
         {
             if (string.IsNullOrEmpty(binary))
                 return binary;
