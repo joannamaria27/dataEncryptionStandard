@@ -63,6 +63,13 @@ namespace BSK_DES {
 				stringBuilder.Append(StringToBinary(((addedBits/8)+1).ToString()));
 
 			}
+			else {
+				for (int i = 0; i < 56; i++) {
+					stringBuilder.Append("0");
+					addedBits++;
+				}
+				stringBuilder.Append(StringToBinary(8.ToString()));
+			}
 
 			return stringBuilder.ToString();
 		}
