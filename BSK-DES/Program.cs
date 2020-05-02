@@ -255,7 +255,8 @@ namespace BSK_DES
 
         static void Main(string[] args)
         {
-
+            FileHandler.ReadFromTextFile("input.txt");
+            //FileHandler.ReadFromBinFile("cat.jpg");
 
             Console.WriteLine("DES!");
 
