@@ -9,7 +9,7 @@ namespace BSK_DES
     {
 
         // 0011000000110001001100100011001100110100001101010011011000110111 - 64 bits 01234567
-
+        public static Boolean flaga = false;
         public static string ReadFromTextFile(string path) ///obsługa błędów kiedy zła nazwa + kiedy zła długosc klucza
         {
             string text = File.ReadAllText(path);
@@ -74,7 +74,14 @@ namespace BSK_DES
 			int base64, new64, addedBits = 0;
 			StringBuilder stringBuilder = new StringBuilder(text);
 			if(length % 64 != 0) {
+                flaga = true;
 				base64 = length / 64;
+                if(base64==0)
+                {
+                    new64 = 64 + 64;
+
+                }
+                else
 				new64 = base64*64 + 64;
 				for(int i = length; i < new64 - 8; i++) {
 					stringBuilder.Append("0");
@@ -83,20 +90,19 @@ namespace BSK_DES
 				stringBuilder.Append(StringToBinary(((addedBits/8)+1).ToString()));
 
 			}
-			else {
+			/*else {
 				for (int i = 0; i < 56; i++) {
 					stringBuilder.Append("0");
 					addedBits++;
 				}
 				stringBuilder.Append(StringToBinary(8.ToString()));
-			}
+			}*/
 
 			return stringBuilder.ToString();
-		}
+        }
+        
 
-
-
-        public static string BinaryStringToHexString(string binary)
+    public static string BinaryStringToHexString(string binary)
         {
             if (string.IsNullOrEmpty(binary))
                 return binary;

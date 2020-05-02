@@ -366,7 +366,16 @@ namespace BSK_DES
 
                             char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
 
+
                             string str = new string(koniecPer);
+                            // usuniecie nadmiaru
+                           
+                            if (FileHandler.flaga == true)
+                            {
+                                string liczba = str.Substring(str.Length - 8, 8);
+                                int licz = Convert.ToInt32(liczba);
+                                str = str.Remove(str.Length - licz);
+                            }
                             Console.Write("TEKST WYJSCIOWY (BIN): " + str);
 
                             string wyjscie = FileHandler.BinaryStringToHexString(str);
