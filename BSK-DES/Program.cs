@@ -256,7 +256,7 @@ namespace BSK_DES
 
         static void Main(string[] args)
         {
-
+            FileHandler.ReadFromFile("input.txt");
 
             Console.WriteLine("DES!");
 
