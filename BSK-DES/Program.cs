@@ -266,257 +266,257 @@ namespace BSK_DES
             {
                 case 1:
                     {
-                        string tekstJawny = "";
                         Console.WriteLine("KODOWANIE");
 
                         Console.WriteLine("Podaj nazwę z rozszezenie do odczytu\n");
                         string plikb = Console.ReadLine();
-                        tekstJawny = FileHandler.ReadFromBinFile(plikb);
+                        string tekstJawny = FileHandler.ReadFromTextFile(plikb); //zm
 
                         Console.WriteLine("Podaj plik txt do odczytu klucza\n");
                         string plikk = Console.ReadLine();
                         string klucz = FileHandler.ReadFromTextFile(plikk);
 
-
-                        //0010010010110011001000100000001010001011000011110101101110111100
-
+                        //kluczyk1 - 0110101101101100011101010110001101111010011110010110101100110001
+                                 
+                        //pisz dwadziescia cztery znaki - 0111000001101001011100110111101000100000011001000111011101100001011001000111101001101001011001010111001101100011011010010110000100100000011000110111101001110100011001010111001001111001001000000111101001101110011000010110101101101001
+                        //wyjscie strona: 1110011100000111011101111001010110000011111000000010110001011001100000000110100011001001010111010100010011110111001101100100100111010111010010110101011101010111001101101100111111000010100011001111001000101000011010001110010100100011100110111110001110101
+                        //my  0001110011100000111011101111001010110000011111000000010110001011001100000000110100011001001010111010100010011110111001101100100100111010111010010110101011101010111001101101100111111000010100011101010110110011111001100011001010000110100000001000101100101110
                         //0101010101100000010010100000111010000110010100000010111100111110 -- testowy klucz i tekst //0101000110011010001110100111101100100000111101110100111000110111 -- dobry wynik
-                        //                                                                                          //
-                        //1101011000011011000000110010100000001001110000001010000010100001
-                        //
-
-                        FileHandler.AdjustStringTo64(tekstJawny);
-                        string[,] tablica64;
-                     
-
 
                         char[] tablicaPoczatkowa = new char[64];
                         char[] tablicaPoczatkowaKlucz = new char[64];
 
                         int m = 0;
-                        for (int i = 0; i < 64; i++)
+                        for (int a = 0; a < tekstJawny.Length / 64; a++)
                         {
-                            tablicaPoczatkowa[i] = tekstJawny[m];
-                            tablicaPoczatkowaKlucz[i] = tekstJawny[m];
-                            m++;
-                        }
-
-                        char[] tablicaPermutacji = Permutacja(tablicaPoczatkowa, ip); //2.
-                        char[] blokL = Dzielenie(tablicaPermutacji, 32, 0); //3.
-                        char[] blokP = Dzielenie(tablicaPermutacji, 32, 32); //3.
-
-                        //klucz 4 -7 
-
-                        char[] tablicaPermutacjiKlucza = Permutacja(tablicaPoczatkowaKlucz, pc); //4.
-                        char[] kluczC = Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
-                        char[] kluczD = Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
-
-                        //6.
-                        List<char> kluczC6 = new List<char>(kluczC);
-                        List<char> kluczD6 = new List<char>(kluczD);
-                        char[,] kluczeCpo6 = new char[16, 28];
-                        char[,] kluczeDpo6 = new char[16, 28];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            kluczC6.AddRange(kluczC6.GetRange(0, przesuniecie6[i]));
-                            kluczC6.RemoveRange(0, przesuniecie6[i]);
-
-                            kluczD6.AddRange(kluczD6.GetRange(0, przesuniecie6[i]));
-                            kluczD6.RemoveRange(0, przesuniecie6[i]);
-
-                            for (int j = 0; j < 28; j++)
+                           
+                            for (int i = 0; i < 64; i++)
                             {
-                                kluczeCpo6[i, j] = kluczC6[j];
-                                kluczeDpo6[i, j] = kluczD6[j];
+                                tablicaPoczatkowa[i] = tekstJawny[m++];
+                                tablicaPoczatkowaKlucz[i] = klucz[i];
+                                
                             }
-                        }
 
-                        //7.
-                        char[,] K = new char[16, 56];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            for (int j = 0; j < 28; j++)
+                            char[] tablicaPermutacji = Permutacja(tablicaPoczatkowa, ip); //2.
+                            char[] blokL = Dzielenie(tablicaPermutacji, 32, 0); //3.
+                            char[] blokP = Dzielenie(tablicaPermutacji, 32, 32); //3.
+
+                            //klucz 4 -7 
+                            char[] tablicaPermutacjiKlucza = Permutacja(tablicaPoczatkowaKlucz, pc); //4.
+                            char[] kluczC = Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
+                            char[] kluczD = Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
+
+                            //6.
+                            List<char> kluczC6 = new List<char>(kluczC);
+                            List<char> kluczD6 = new List<char>(kluczD);
+                            char[,] kluczeCpo6 = new char[16, 28];
+                            char[,] kluczeDpo6 = new char[16, 28];
+                            for (int i = 0; i < 16; i++)
                             {
-                                K[i, j] = kluczeCpo6[i, j];
+                                kluczC6.AddRange(kluczC6.GetRange(0, przesuniecie6[i]));
+                                kluczC6.RemoveRange(0, przesuniecie6[i]);
 
+                                kluczD6.AddRange(kluczD6.GetRange(0, przesuniecie6[i]));
+                                kluczD6.RemoveRange(0, przesuniecie6[i]);
+
+                                for (int j = 0; j < 28; j++)
+                                {
+                                    kluczeCpo6[i, j] = kluczC6[j];
+                                    kluczeDpo6[i, j] = kluczD6[j];
+                                }
                             }
-                            for (int j = 28, k = 0; j < 56; j++, k++)
+
+                            //7.
+                            char[,] K = new char[16, 56];
+                            for (int i = 0; i < 16; i++)
                             {
-                                K[i, j] = kluczeDpo6[i, k];
+                                for (int j = 0; j < 28; j++)
+                                {
+                                    K[i, j] = kluczeCpo6[i, j];
 
+                                }
+                                for (int j = 28, k = 0; j < 56; j++, k++)
+                                {
+                                    K[i, j] = kluczeDpo6[i, k];
+
+                                }
                             }
-                        }
 
-                        int pomocnicza = 0;
-                        char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            for (int j = 0; j < 48; j++)
+                            int pomocnicza = 0;
+                            char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
+                            for (int i = 0; i < 16; i++)
                             {
-                                pomocnicza = pc2[j];
-                                tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
+                                for (int j = 0; j < 48; j++)
+                                {
+                                    pomocnicza = pc2[j];
+                                    tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
+                                }
                             }
+
+                            /////////////////////////////////////////
+                            /// 8-16. 
+                            char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
+                            char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
+                            char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
+                            char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 3);
+                            char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 4);
+                            char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 5);
+                            char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 6);
+                            char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 7);
+                            char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 8);
+                            char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 9);
+                            char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 10);
+                            char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 11);
+                            char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 12);
+                            char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 13);
+                            char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
+                            char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
+
+
+                            //17.
+                            char[] koniec = new char[64];
+                            for (int i = 0; i < 32; i++)
+                            {
+                                koniec[i] = ril15[0, i];
+                            }
+                            int d = 32;
+                            for (int i = 0; i < 32; i++)
+                            {
+                                koniec[d++] = ril15[1, i];
+                            }
+
+                            char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
+                            Console.WriteLine(koniecPer);
+                            //zapis do pliku - zamienic na tekst
                         }
-
-                        /////////////////////////////////////////
-                        /// 8-16. 
-                        char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
-                        char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
-                        char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
-                        char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 3);
-                        char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 4);
-                        char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 5);
-                        char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 6);
-                        char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 7);
-                        char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 8);
-                        char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 9);
-                        char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 10);
-                        char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 11);
-                        char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 12);
-                        char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 13);
-                        char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
-                        char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
-
-
-                        //17.
-                        char[] koniec = new char[64];
-                        for (int i = 0; i < 32; i++)
-                        {
-                            koniec[i] = ril15[0, i];
-                        }
-                        int d = 32;
-                        for (int i = 0; i < 32; i++)
-                        {
-                            koniec[d++] = ril15[1, i];
-                        }
-
-                        char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
-
-                        Console.WriteLine(koniecPer);
-
                         break;
                     }
                 case 2:
                     {
 
-                        Console.WriteLine("ODKODOWANIE");
-                        Console.WriteLine("Wprowadz 64 bitowy tekst binarniy zaszyfrowany: ");
-                        string tekstJawny = Console.ReadLine();
-                        Console.WriteLine("Wprowadz 64 bitowy klucz binarniy: ");
-                        string klucz = Console.ReadLine();
-                        ////////////////////////podzielenie na bloki 64 bitowe - narazie tylko jeden blok wprowadzany jest
+                        string tekstZakodowany = "";
+                        Console.WriteLine("KODOWANIE");
 
+                        Console.WriteLine("Podaj nazwę z rozszezenie do odczytu\n");
+                        string plikb = Console.ReadLine();
+                        tekstZakodowany = FileHandler.ReadFromTextFile(plikb); //zm
+
+                        Console.WriteLine("Podaj plik txt do odczytu klucza\n");
+                        string plikk = Console.ReadLine();
+                        string klucz = FileHandler.ReadFromTextFile(plikk);
 
                         char[] tablicaPoczatkowa = new char[64];
                         char[] tablicaPoczatkowaKlucz = new char[64];
 
                         int m = 0;
-                        for (int i = 0; i < 64; i++)
+                        for (int a = 0; a < tekstZakodowany.Length / 64; a++)
                         {
-                            tablicaPoczatkowa[i] = tekstJawny[m];
-                            tablicaPoczatkowaKlucz[i] = tekstJawny[m];
-                            m++;
-                        }
-
-                        char[] tablicaPermutacji = Permutacja(tablicaPoczatkowa, ip); //2.
-                        char[] blokL = Dzielenie(tablicaPermutacji, 32, 0); //3.
-                        char[] blokP = Dzielenie(tablicaPermutacji, 32, 32); //3.
-
-                        //klucz 4 -7 
-
-                        char[] tablicaPermutacjiKlucza = Permutacja(tablicaPoczatkowaKlucz, pc); //4.
-                        char[] kluczC = Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
-                        char[] kluczD = Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
-
-                        //6.
-                        List<char> kluczC6 = new List<char>(kluczC);
-                        List<char> kluczD6 = new List<char>(kluczD);
-                        char[,] kluczeCpo6 = new char[16, 28];
-                        char[,] kluczeDpo6 = new char[16, 28];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            kluczC6.AddRange(kluczC6.GetRange(0, przesuniecie6[i]));
-                            kluczC6.RemoveRange(0, przesuniecie6[i]);
-
-                            kluczD6.AddRange(kluczD6.GetRange(0, przesuniecie6[i]));
-                            kluczD6.RemoveRange(0, przesuniecie6[i]);
-
-                            for (int j = 0; j < 28; j++)
+                            
+                            for (int i = 0; i < 64; i++)
                             {
-                                kluczeCpo6[i, j] = kluczC6[j];
-                                kluczeDpo6[i, j] = kluczD6[j];
+                                tablicaPoczatkowa[i] = tekstZakodowany[m];
+                                tablicaPoczatkowaKlucz[i] = klucz[i];
+                                m++;
                             }
-                        }
 
-                        //7.
-                        char[,] K = new char[16, 56];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            for (int j = 0; j < 28; j++)
+                            char[] tablicaPermutacji = Permutacja(tablicaPoczatkowa, ip); //2.
+                            char[] blokL = Dzielenie(tablicaPermutacji, 32, 0); //3.
+                            char[] blokP = Dzielenie(tablicaPermutacji, 32, 32); //3.
+
+                            //klucz 4 -7 
+                            char[] tablicaPermutacjiKlucza = Permutacja(tablicaPoczatkowaKlucz, pc); //4.
+                            char[] kluczC = Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
+                            char[] kluczD = Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
+
+                            //6.
+                            List<char> kluczC6 = new List<char>(kluczC);
+                            List<char> kluczD6 = new List<char>(kluczD);
+                            char[,] kluczeCpo6 = new char[16, 28];
+                            char[,] kluczeDpo6 = new char[16, 28];
+                            for (int i = 0; i < 16; i++)
                             {
-                                K[i, j] = kluczeCpo6[i, j];
+                                kluczC6.AddRange(kluczC6.GetRange(0, przesuniecie6[i]));
+                                kluczC6.RemoveRange(0, przesuniecie6[i]);
 
+                                kluczD6.AddRange(kluczD6.GetRange(0, przesuniecie6[i]));
+                                kluczD6.RemoveRange(0, przesuniecie6[i]);
+
+                                for (int j = 0; j < 28; j++)
+                                {
+                                    kluczeCpo6[i, j] = kluczC6[j];
+                                    kluczeDpo6[i, j] = kluczD6[j];
+                                }
                             }
-                            for (int j = 28, k = 0; j < 56; j++, k++)
+
+                            //7.
+                            char[,] K = new char[16, 56];
+                            for (int i = 0; i < 16; i++)
                             {
-                                K[i, j] = kluczeDpo6[i, k];
+                                for (int j = 0; j < 28; j++)
+                                {
+                                    K[i, j] = kluczeCpo6[i, j];
 
+                                }
+                                for (int j = 28, k = 0; j < 56; j++, k++)
+                                {
+                                    K[i, j] = kluczeDpo6[i, k];
+
+                                }
                             }
-                        }
 
-                        int pomocnicza = 0;
-                        char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            for (int j = 0; j < 48; j++)
+                            int pomocnicza = 0;
+                            char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
+                            for (int i = 0; i < 16; i++)
                             {
-                                pomocnicza = pc2[j];
-                                tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
+                                for (int j = 0; j < 48; j++)
+                                {
+                                    pomocnicza = pc2[j];
+                                    tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
+                                }
                             }
+
+                            /////////////////////////////////////////
+                            /// 8-16. 
+                            char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 15);
+                            char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 14);
+                            char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 13);
+                            char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 12);
+                            char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 11);
+                            char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 10);
+                            char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 9);
+                            char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 8);
+                            char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 7);
+                            char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 6);
+                            char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 5);
+                            char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 4);
+                            char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 3);
+                            char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 2);
+                            char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 1);
+                            char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 0);
+
+
+                            //17.
+                            char[] koniec = new char[64];
+                            for (int i = 0; i < 32; i++)
+                            {
+                                koniec[i] = ril15[0, i];
+                            }
+                            int d = 32;
+                            for (int i = 0; i < 32; i++)
+                            {
+                                koniec[d++] = ril15[1, i];
+                            }
+
+                            char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
+
+                            Console.WriteLine(koniecPer);
+
+                            
+
                         }
-
-                        /////////////////////////////////////////
-                        /// 8-16. 
-                        char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
-                        char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
-                        char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
-                        char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 3);
-                        char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 4);
-                        char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 5);
-                        char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 6);
-                        char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 7);
-                        char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 8);
-                        char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 9);
-                        char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 10);
-                        char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 11);
-                        char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 12);
-                        char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 13);
-                        char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
-                        char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
-
-
-                        //17.
-                        char[] koniec = new char[64];
-                        for (int i = 0; i < 32; i++)
-                        {
-                            koniec[i] = ril15[0, i];
-                        }
-                        int d = 32;
-                        for (int i = 0; i < 32; i++)
-                        {
-                            koniec[d++] = ril15[1, i];
-                        }
-
-                        char[] koniecPer = Permutacja(koniec, IP1minus1); //18.
-
-                        Console.WriteLine(koniecPer);
 
                         break;
-
                     }
-
-
-
             }
 
 

@@ -11,7 +11,7 @@ namespace BSK_DES {
 		public static string ReadFromTextFile(string path) {
 			string text = File.ReadAllText(path);
 			text = StringToBinary(text);
-			text = AdjustStringTo64(text);
+			//text = AdjustStringTo64(text);
 			return text;
 		}
 
