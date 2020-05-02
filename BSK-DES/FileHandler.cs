@@ -8,11 +8,26 @@ namespace BSK_DES {
 
 		// 0011000000110001001100100011001100110100001101010011011000110111 - 64 bits 01234567
 
-		public static string ReadFromFile(string path) {
+		public static string ReadFromTextFile(string path) {
 			string text = File.ReadAllText(path);
 			text = StringToBinary(text);
 			text = AdjustStringTo64(text);
 			return text;
+		}
+
+		public static string ReadFromBinFile(string path) {
+			byte[] fileBytes = File.ReadAllBytes(path);
+			StringBuilder sb = new StringBuilder();
+			string output;
+
+			foreach (byte b in fileBytes) {
+				sb.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
+			}
+
+			output = sb.ToString();
+			output = AdjustStringTo64(output);
+
+			return output;
 		}
 
 		private static string StringToBinary(string data) {
