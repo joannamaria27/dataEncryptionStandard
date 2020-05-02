@@ -252,6 +252,7 @@ namespace BSK_DES
         }
 
 
+
         static void Main(string[] args)
         {
 
@@ -268,8 +269,8 @@ namespace BSK_DES
                         ////////////////////////wprowadzenie liczb - narazie ręcznie 64 zera i jednynki
 
                         //0101010101100000010010100000111010000110010100000010111100111110 -- testowy klucz i tekst //0101000110011010001110100111101100100000111101110100111000110111 -- dobry wynik
-                        //                                                                                          
-                        //
+                        //                                                                                          //
+                        //1101011000011011000000110010100000001001110000001010000010100001
                         //
                         Console.WriteLine("KODOWANIE");
                         Console.WriteLine("Wprowadz 64 bitowy tekst binarniy: ");
@@ -466,22 +467,22 @@ namespace BSK_DES
 
                         /////////////////////////////////////////
                         /// 8-16. 
-                        char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 15);
-                        char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 14);
-                        char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 13);
-                        char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 12);
-                        char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 11);
-                        char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 10);
-                        char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 9);
-                        char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 8);
-                        char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 7);
-                        char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 6);
-                        char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 5);
-                        char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 4);
-                        char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 3);
-                        char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 2);
-                        char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 1);
-                        char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 0);
+                        char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
+                        char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
+                        char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
+                        char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 3);
+                        char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 4);
+                        char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 5);
+                        char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 6);
+                        char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 7);
+                        char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 8);
+                        char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 9);
+                        char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 10);
+                        char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 11);
+                        char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 12);
+                        char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 13);
+                        char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
+                        char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
 
 
                         //17.
@@ -500,21 +501,13 @@ namespace BSK_DES
 
                         Console.WriteLine(koniecPer);
 
+                        break;
 
                     }
 
 
 
-
-
-                    break;
-
             }
-
-
-
-
-
 
 
 
