@@ -6,109 +6,8 @@ namespace BSK_DES
 {
     class Program
     {
-
-
-
-
-        public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2, int numer)
-        {
-            char[,] rl = new char[2, 32];
-            char[] blokR8 = Des.Permutacja(blokR, Des.E); //8.
-                                                      //9. xor Kn, Rn-1
-            char[] tablicaK = new char[48];
-            for (int i = 0; i < 48; i++)
-            {
-                tablicaK[i] = tablicaPermutacjiKlucza2[numer, i];
-            }
-            char[] tablicaXOR = Des.Xorowanie(tablicaK, blokR8);
-
-            //10.
-            int p = 0;
-            char[,] S = new char[8, 6];
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 6; j++)
-                {
-                    S[i, j] = tablicaXOR[p]; p++;
-                }
-            }
-
-            char[] ciag6bit1 = Des.Odczytywanie(0, S, Des.S1); //11-12.
-            char[] ciag6bit2 = Des.Odczytywanie(1, S, Des.S2);
-            char[] ciag6bit3 = Des.Odczytywanie(2, S, Des.S3);
-            char[] ciag6bit4 = Des.Odczytywanie(3, S, Des.S4);
-            char[] ciag6bit5 = Des.Odczytywanie(4, S, Des.S5);
-            char[] ciag6bit6 = Des.Odczytywanie(5, S, Des.S6);
-            char[] ciag6bit7 = Des.Odczytywanie(6, S, Des.S7);
-            char[] ciag6bit8 = Des.Odczytywanie(7, S, Des.S8);
-
-            //13.
-            char[] ciagR = new char[32];
-            int r = 0;
-            foreach (char i in ciag6bit1)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit2)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit3)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit4)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit5)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit6)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit7)
-            {
-                ciagR[r++] = i;
-            }
-            foreach (char i in ciag6bit8)
-            {
-                ciagR[r++] = i;
-            }
-
-            char[] RPermutacja = Des.Permutacja(ciagR, Des.P); //14.
-            //xor Ln-1 Rn-1
-            char[] blokRn = Des.Xorowanie(RPermutacja, blokL); //15.
-            char[] blokLn = blokR; //16.
-            for (int i = 0; i < 32; i++)
-            {
-                rl[0, i] = blokRn[i];
-                rl[1, i] = blokLn[i];
-            }
-
-            return rl;
-        }
-        public static char[,] Laczenie(char[,] ril, char[,] tablicaPermutacjiKlucza2, int numer)
-        {
-            char[] blokRn = new char[32];
-            char[] blokLn = new char[32];
-            for (int i = 0; i < 32; i++)
-            {
-                blokLn[i] = ril[0, i];
-                blokRn[i] = ril[1, i];
-            }
-            char[,] riln = RiL(blokLn, blokRn, tablicaPermutacjiKlucza2, numer);
-            return riln;
-        }
-
-
-
         static void Main(string[] args)
         {
-            //FileHandler.ReadFromTextFile("input.txt");
-            //FileHandler.ReadFromBinFile("cat.jpg");
 
             Console.WriteLine("halo!");
             Console.WriteLine("Menu\n 1-KODOWANIE\n 2-ODKODOWANIE");
@@ -120,15 +19,18 @@ namespace BSK_DES
                     {
                         Console.WriteLine("KODOWANIE");
 
-                        Console.WriteLine("Podaj nazwę z rozszezenie do odczytu\n");
+                        Console.WriteLine("Podaj nazwę z rozszezenie do odczytu: ");
                         string plikb = Console.ReadLine();
                         string tekstJawny = FileHandler.ReadFromTextFile(plikb); //zm
 
-                        Console.WriteLine("Podaj plik txt do odczytu klucza\n");
+                        Console.WriteLine("Podaj plik txt do odczytu klucza: ");
                         string plikk = Console.ReadLine();
                         string klucz = FileHandler.ReadFromTextFile(plikk);
 
-                        while(tekstJawny.Length<64)
+
+
+
+                        while (tekstJawny.Length < 64) //zam
                         {
                             tekstJawny = "0" + tekstJawny;
                         }
@@ -158,7 +60,27 @@ namespace BSK_DES
                             char[] tablicaPermutacjiKlucza = Des.Permutacja(tablicaPoczatkowaKlucz, Des.pc); //4.
                             char[] kluczC = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
                             char[] kluczD = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
+                          
+                            Console.Write("KLUCZ (BIN): ");
+                            foreach (char element in tablicaPoczatkowaKlucz)
+                            {
+                                Console.Write(element);
+                            }
+                            Console.Write("\n");
+                            Console.Write("KLUCZ C: ");
+                            foreach (char element in kluczC)
+                            {
+                                Console.Write(element);
+                            }
+                            Console.Write("\n");
 
+                            Console.Write("KLUCZ D: ");
+                            foreach (char element in kluczD)
+                            {
+                                Console.Write(element);
+                            }
+                            Console.Write("\n");
+                            Console.WriteLine("-----------------------------------------------");
                             //6.
                             List<char> kluczC6 = new List<char>(kluczC);
                             List<char> kluczD6 = new List<char>(kluczD);
@@ -178,7 +100,23 @@ namespace BSK_DES
                                     kluczeDpo6[i, j] = kluczD6[j];
                                 }
                             }
+                            for (int u = 0; u < 16; u++)
+                            {
+                                Console.Write("KLUCZ C {0}: ", u + 1);
+                                for (int i = 0; i < 28; i++)
+                                {
+                                    Console.Write(kluczeCpo6[u, i]);
 
+                                }
+                                Console.Write("KLUCZ D {0}: ", u + 1);
+                                for (int i = 0; i < 28; i++)
+                                {
+
+                                    Console.Write(kluczeDpo6[u, i]);
+                                }
+                                Console.Write("\n");
+                            }
+                            Console.WriteLine("-----------------------------------------------");
                             //7.
                             char[,] K = new char[16, 56];
                             for (int i = 0; i < 16; i++)
@@ -195,6 +133,7 @@ namespace BSK_DES
                                 }
                             }
 
+
                             int pomocnicza = 0;
                             char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
                             for (int i = 0; i < 16; i++)
@@ -205,25 +144,35 @@ namespace BSK_DES
                                     tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
                                 }
                             }
-
+                            for (int u = 0; u < 16; u++)
+                            {
+                                Console.Write("KLUCZ WYJSCIOWE " + "{0}: ", u + 1);
+                                for (int i = 0; i < 48; i++)
+                                {
+                                    Console.Write(tablicaPermutacjiKlucza2[u, i]);
+                                }
+                                Console.Write("\n");
+                            }
+                            Console.WriteLine("-----------------------------------------------");
+                            Console.WriteLine("TEKST POCZATKOWY: " + tablicaPoczatkowa);
                             /////////////////////////////////////////
                             /// 8-16. 
-                            char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
-                            char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
-                            char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
-                            char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 3);
-                            char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 4);
-                            char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 5);
-                            char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 6);
-                            char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 7);
-                            char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 8);
-                            char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 9);
-                            char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 10);
-                            char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 11);
-                            char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 12);
-                            char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 13);
-                            char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
-                            char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
+                            char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
+                            char[,] ril1 = Des.Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
+                            char[,] ril2 = Des.Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
+                            char[,] ril3 = Des.Laczenie(ril2, tablicaPermutacjiKlucza2, 3);
+                            char[,] ril4 = Des.Laczenie(ril3, tablicaPermutacjiKlucza2, 4);
+                            char[,] ril5 = Des.Laczenie(ril4, tablicaPermutacjiKlucza2, 5);
+                            char[,] ril6 = Des.Laczenie(ril5, tablicaPermutacjiKlucza2, 6);
+                            char[,] ril7 = Des.Laczenie(ril6, tablicaPermutacjiKlucza2, 7);
+                            char[,] ril8 = Des.Laczenie(ril7, tablicaPermutacjiKlucza2, 8);
+                            char[,] ril9 = Des.Laczenie(ril8, tablicaPermutacjiKlucza2, 9);
+                            char[,] ril10 = Des.Laczenie(ril9, tablicaPermutacjiKlucza2, 10);
+                            char[,] ril11 = Des.Laczenie(ril10, tablicaPermutacjiKlucza2, 11);
+                            char[,] ril12 = Des.Laczenie(ril11, tablicaPermutacjiKlucza2, 12);
+                            char[,] ril13 = Des.Laczenie(ril12, tablicaPermutacjiKlucza2, 13);
+                            char[,] ril14 = Des.Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
+                            char[,] ril15 = Des.Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
 
 
                             //17.
@@ -239,14 +188,13 @@ namespace BSK_DES
                             }
 
                             char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
-                            Console.WriteLine(koniecPer);
-
                             string str = new string(koniecPer);
-
+                            Console.Write("TEKST WYJSCIOWY (BIN): " + str);
 
                             string wyjscie = FileHandler.BinaryStringToHexString(str);
+                            Console.WriteLine("\nTEKST WYJSCIOWY: "+ wyjscie);
                             File.WriteAllText(@"zakodowane.txt", wyjscie);
-                          
+
                         }
                         break;
                     }
@@ -256,14 +204,14 @@ namespace BSK_DES
                         string tekstZakodowany = "";
                         Console.WriteLine("KODOWANIE");
 
-                        Console.WriteLine("Podaj nazwę z rozszezenie do odczytu\n");
+                        Console.WriteLine("Podaj nazwę z rozszezenie do odczytu: ");
                         string plikb = Console.ReadLine();
                         tekstZakodowany = FileHandler.ReadFromTextFile(plikb); //zm
 
-                        Console.WriteLine("Podaj plik txt do odczytu klucza\n");
+                        Console.WriteLine("Podaj plik txt do odczytu klucza: ");
                         string plikk = Console.ReadLine();
                         string klucz = FileHandler.ReadFromTextFile(plikk);
-                        while (tekstZakodowany.Length < 64)
+                        while (tekstZakodowany.Length < 64) //zm
                         {
                             tekstZakodowany = "0" + tekstZakodowany;
                         }
@@ -293,7 +241,26 @@ namespace BSK_DES
                             char[] tablicaPermutacjiKlucza = Des.Permutacja(tablicaPoczatkowaKlucz, Des.pc); //4.
                             char[] kluczC = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
                             char[] kluczD = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
-
+                            Console.WriteLine("-----------------------------------------------");
+                            Console.Write("KLUCZ (BIN): ");
+                            foreach (char element in tablicaPoczatkowaKlucz)
+                            {
+                                Console.Write(element);
+                            }
+                            Console.Write("\n");
+                            Console.Write("KLUCZ C: ");
+                            foreach (char element in kluczC)
+                            {
+                                Console.Write(element);
+                            }
+                            Console.Write("\n");
+                            Console.Write("KLUCZ D: ");
+                            foreach (char element in kluczD)
+                            {
+                                Console.Write(element);
+                            }
+                            Console.Write("\n");
+                            Console.WriteLine("-----------------------------------------------");
                             //6.
                             List<char> kluczC6 = new List<char>(kluczC);
                             List<char> kluczD6 = new List<char>(kluczD);
@@ -313,7 +280,23 @@ namespace BSK_DES
                                     kluczeDpo6[i, j] = kluczD6[j];
                                 }
                             }
+                            for (int u = 0; u < 16; u++)
+                            {
+                                Console.Write("KLUCZ C {0}: ", u + 1);
+                                for (int i = 0; i < 28; i++)
+                                {
+                                    Console.Write(kluczeCpo6[u, i]);
 
+                                }
+                                Console.Write("KLUCZ D {0}: ", u + 1);
+                                for (int i = 0; i < 28; i++)
+                                {
+
+                                    Console.Write(kluczeDpo6[u, i]);
+                                }
+                                Console.Write("\n");
+                            }
+                            Console.WriteLine("-----------------------------------------------");
                             //7.
                             char[,] K = new char[16, 56];
                             for (int i = 0; i < 16; i++)
@@ -340,25 +323,35 @@ namespace BSK_DES
                                     tablicaPermutacjiKlucza2[i, j] = K[i, pomocnicza - 1];
                                 }
                             }
-
+                            for (int u = 0; u < 16; u++)
+                            {
+                                Console.Write("KLUCZ WYJSCIOWE " + "{0}: ", u + 1);
+                                for (int i = 0; i < 48; i++)
+                                {
+                                    Console.Write(tablicaPermutacjiKlucza2[u, i]);
+                                }
+                                Console.Write("\n");
+                            }
+                            Console.WriteLine("-----------------------------------------------");
+                            Console.WriteLine("TEKST POCZATKOWY: " + tablicaPoczatkowa);
                             /////////////////////////////////////////
                             /// 8-16. 
-                            char[,] ril0 = RiL(blokP, blokL, tablicaPermutacjiKlucza2, 15);
-                            char[,] ril1 = Laczenie(ril0, tablicaPermutacjiKlucza2, 14);
-                            char[,] ril2 = Laczenie(ril1, tablicaPermutacjiKlucza2, 13);
-                            char[,] ril3 = Laczenie(ril2, tablicaPermutacjiKlucza2, 12);
-                            char[,] ril4 = Laczenie(ril3, tablicaPermutacjiKlucza2, 11);
-                            char[,] ril5 = Laczenie(ril4, tablicaPermutacjiKlucza2, 10);
-                            char[,] ril6 = Laczenie(ril5, tablicaPermutacjiKlucza2, 9);
-                            char[,] ril7 = Laczenie(ril6, tablicaPermutacjiKlucza2, 8);
-                            char[,] ril8 = Laczenie(ril7, tablicaPermutacjiKlucza2, 7);
-                            char[,] ril9 = Laczenie(ril8, tablicaPermutacjiKlucza2, 6);
-                            char[,] ril10 = Laczenie(ril9, tablicaPermutacjiKlucza2, 5);
-                            char[,] ril11 = Laczenie(ril10, tablicaPermutacjiKlucza2, 4);
-                            char[,] ril12 = Laczenie(ril11, tablicaPermutacjiKlucza2, 3);
-                            char[,] ril13 = Laczenie(ril12, tablicaPermutacjiKlucza2, 2);
-                            char[,] ril14 = Laczenie(ril13, tablicaPermutacjiKlucza2, 1);
-                            char[,] ril15 = Laczenie(ril14, tablicaPermutacjiKlucza2, 0);
+                            char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 15);
+                            char[,] ril1 = Des.Laczenie(ril0, tablicaPermutacjiKlucza2, 14);
+                            char[,] ril2 = Des.Laczenie(ril1, tablicaPermutacjiKlucza2, 13);
+                            char[,] ril3 = Des.Laczenie(ril2, tablicaPermutacjiKlucza2, 12);
+                            char[,] ril4 = Des.Laczenie(ril3, tablicaPermutacjiKlucza2, 11);
+                            char[,] ril5 = Des.Laczenie(ril4, tablicaPermutacjiKlucza2, 10);
+                            char[,] ril6 = Des.Laczenie(ril5, tablicaPermutacjiKlucza2, 9);
+                            char[,] ril7 = Des.Laczenie(ril6, tablicaPermutacjiKlucza2, 8);
+                            char[,] ril8 = Des.Laczenie(ril7, tablicaPermutacjiKlucza2, 7);
+                            char[,] ril9 = Des.Laczenie(ril8, tablicaPermutacjiKlucza2, 6);
+                            char[,] ril10 = Des.Laczenie(ril9, tablicaPermutacjiKlucza2, 5);
+                            char[,] ril11 = Des.Laczenie(ril10, tablicaPermutacjiKlucza2, 4);
+                            char[,] ril12 = Des.Laczenie(ril11, tablicaPermutacjiKlucza2, 3);
+                            char[,] ril13 = Des.Laczenie(ril12, tablicaPermutacjiKlucza2, 2);
+                            char[,] ril14 = Des.Laczenie(ril13, tablicaPermutacjiKlucza2, 1);
+                            char[,] ril15 = Des.Laczenie(ril14, tablicaPermutacjiKlucza2, 0);
 
 
                             //17.
@@ -375,14 +368,13 @@ namespace BSK_DES
 
                             char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
 
-                            Console.WriteLine(koniecPer);
-
                             string str = new string(koniecPer);
-
-
+                            Console.Write("TEKST WYJSCIOWY (BIN): "+ str);
+                         
                             string wyjscie = FileHandler.BinaryStringToHexString(str);
+                            Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
                             File.WriteAllText(@"odkodowane.txt", wyjscie);
-                           
+
                         }
 
                         break;

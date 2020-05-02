@@ -33,6 +33,7 @@ namespace BSK_DES
                     XOR[i] = '1';
                 }
             }
+
             return XOR;
         }
 
@@ -136,7 +137,9 @@ namespace BSK_DES
             for (int i = 0; i < rozmiar; i++)
             {
                 blok[i] = tablica[l]; l++;
+
             }
+
             return blok;
         }
 
@@ -156,5 +159,190 @@ namespace BSK_DES
                 blok4bit[j] = l[j];
             return blok4bit;
         }
+
+        public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2, int numer)
+        {
+            char[,] rl = new char[2, 32];
+            char[] blokR8 = Des.Permutacja(blokR, Des.E); //8.
+                                                          //9. xor Kn, Rn-1
+            char[] tablicaK = new char[48];
+            for (int i = 0; i < 48; i++)
+            {
+                tablicaK[i] = tablicaPermutacjiKlucza2[numer, i];
+            }
+            char[] tablicaXOR = Des.Xorowanie(tablicaK, blokR8);
+            Console.WriteLine("-----------------------------------------------");
+            Console.Write("BLOK R: ");
+            foreach (char element in blokR)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write("BLOK L: ");
+            foreach (char element in blokL)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            //10.
+            int p = 0;
+            char[,] S = new char[8, 6];
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    S[i, j] = tablicaXOR[p]; p++;
+                }
+            }
+            Console.Write("XOROWANIE: ");
+            foreach (char element in tablicaXOR)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+
+            char[] ciag6bit1 = Des.Odczytywanie(0, S, Des.S1); //11-12.
+            char[] ciag6bit2 = Des.Odczytywanie(1, S, Des.S2);
+            char[] ciag6bit3 = Des.Odczytywanie(2, S, Des.S3);
+            char[] ciag6bit4 = Des.Odczytywanie(3, S, Des.S4);
+            char[] ciag6bit5 = Des.Odczytywanie(4, S, Des.S5);
+            char[] ciag6bit6 = Des.Odczytywanie(5, S, Des.S6);
+            char[] ciag6bit7 = Des.Odczytywanie(6, S, Des.S7);
+            char[] ciag6bit8 = Des.Odczytywanie(7, S, Des.S8);
+
+            Console.Write(" CIĄG 1: ");
+            foreach (char element in ciag6bit1)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 2: ");
+            foreach (char element in ciag6bit2)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 3: ");
+            foreach (char element in ciag6bit3)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 4: ");
+            foreach (char element in ciag6bit4)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 5: ");
+            foreach (char element in ciag6bit5)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 6: ");
+            foreach (char element in ciag6bit6)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 7: ");
+            foreach (char element in ciag6bit7)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            Console.Write(" CIĄG 8: ");
+            foreach (char element in ciag6bit8)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+
+
+
+            //13.
+            char[] ciagR = new char[32];
+            int r = 0;
+            foreach (char i in ciag6bit1)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit2)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit3)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit4)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit5)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit6)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit7)
+            {
+                ciagR[r++] = i;
+            }
+            foreach (char i in ciag6bit8)
+            {
+                ciagR[r++] = i;
+            }
+
+            Console.Write("NOWE R: ");
+            foreach (char element in ciagR)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            char[] RPermutacja = Des.Permutacja(ciagR, Des.P); //14.
+            Console.Write("R PO PERMUTACJI: ");
+            foreach (char element in RPermutacja)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            //xor Ln-1 Rn-1
+            char[] blokRn = Des.Xorowanie(RPermutacja, blokL); //15.
+            Console.Write("XOROWANIE: ");
+            foreach (char element in blokRn)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\n");
+            char[] blokLn = blokR; //16.
+
+            for (int i = 0; i < 32; i++)
+            {
+                rl[0, i] = blokRn[i];
+                rl[1, i] = blokLn[i];
+            }
+
+            Console.WriteLine("-----------------------------------------------");
+            return rl;
+        }
+        public static char[,] Laczenie(char[,] ril, char[,] tablicaPermutacjiKlucza2, int numer)
+        {
+            char[] blokRn = new char[32];
+            char[] blokLn = new char[32];
+            for (int i = 0; i < 32; i++)
+            {
+                blokLn[i] = ril[0, i];
+                blokRn[i] = ril[1, i];
+            }
+            char[,] riln = RiL(blokLn, blokRn, tablicaPermutacjiKlucza2, numer);
+            return riln;
+        }
+
+
+
     }
 }
