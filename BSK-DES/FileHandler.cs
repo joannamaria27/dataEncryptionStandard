@@ -10,7 +10,7 @@ namespace BSK_DES
 
         // 0011000000110001001100100011001100110100001101010011011000110111 - 64 bits 01234567
 
-        public static string ReadFromTextFile(string path) ///obsługa błędów
+        public static string ReadFromTextFile(string path) ///obsługa błędów kiedy zła nazwa + kiedy zła długosc klucza
         {
             string text = File.ReadAllText(path);
             Console.WriteLine("-----------------------------------------------");
@@ -18,6 +18,14 @@ namespace BSK_DES
           
             text = hex2binary(text);
             //text = AdjustStringTo64(text);
+            return text;
+        }
+
+        public static string ReadFromTextFile2(string path)  ///obsługa błędów kiedy zła nazwa + kiedy zła długosc klucza
+        {
+            string text = File.ReadAllText(path);
+            text = hex2binary(text);
+            text = AdjustStringTo64(text);
             return text;
         }
 
@@ -60,37 +68,31 @@ namespace BSK_DES
             return Encoding.ASCII.GetString(byteList.ToArray());
         }
 
-        public static string AdjustStringTo64(string text)
-        {
+        public static string AdjustStringTo64(string text) {
 
-            int length = text.Length;
-            int base64, new64, addedBits = 0;
-            StringBuilder stringBuilder = new StringBuilder(text);
-            if (length % 64 != 0)
-            {
-                base64 = length / 64;
-                new64 = base64 * 64 + 64;
-                for (int i = length; i < new64 - 8; i++)
-                {
-                    stringBuilder.Append("0");
-                    addedBits++;
-                }
-                stringBuilder.Append(StringToBinary(((addedBits / 8) + 1).ToString()));
+			int length = text.Length;
+			int base64, new64, addedBits = 0;
+			StringBuilder stringBuilder = new StringBuilder(text);
+			if(length % 64 != 0) {
+				base64 = length / 64;
+				new64 = base64*64 + 64;
+				for(int i = length; i < new64 - 8; i++) {
+					stringBuilder.Append("0");
+					addedBits++;
+				}
+				stringBuilder.Append(StringToBinary(((addedBits/8)+1).ToString()));
 
-            }
-            else
-            {
-                for (int i = 0; i < 56; i++)
-                {
-                    stringBuilder.Append("0");
-                    addedBits++;
-                }
-                stringBuilder.Append(StringToBinary(8.ToString()));
-            }
+			}
+			else {
+				for (int i = 0; i < 56; i++) {
+					stringBuilder.Append("0");
+					addedBits++;
+				}
+				stringBuilder.Append(StringToBinary(8.ToString()));
+			}
 
-            return stringBuilder.ToString();
-        }
-
+			return stringBuilder.ToString();
+		}
 
 
 
@@ -115,7 +117,6 @@ namespace BSK_DES
                 string eightBits = binary.Substring(i, 8);
                 result.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
             }
-
             return result.ToString();
         }
 
