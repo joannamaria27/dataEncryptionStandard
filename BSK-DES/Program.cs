@@ -30,19 +30,15 @@ namespace BSK_DES
                             string plikb, plikk;
 
                             do {
-                                Console.WriteLine("Plik tekstu: ");
+                                Console.Write("Plik tekstu: ");
                                 plikb = Console.ReadLine();
                             } while (!File.Exists(plikb));
-                            
                             string tekstJawny = FileHandler.ReadFromTextFile2(plikb);
 
-                            Console.WriteLine("");
-
                             do {
-                                Console.WriteLine("plik klucza: ");
+                                Console.Write("plik klucza: ");
                                 plikk = Console.ReadLine();
                             } while (!File.Exists(plikk));
-                            
 
                             string klucz = FileHandler.ReadFromTextFile1(plikk);
 
@@ -212,7 +208,7 @@ namespace BSK_DES
                                 string wyjscie1 = FileHandler.BinaryStringToHexString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie1);
 
-                                File.AppendAllText(@"z1.txt", wyjscie1);
+                                File.WriteAllText(@"z1.txt", wyjscie1);
                             }
                             break;
                         }
@@ -220,14 +216,23 @@ namespace BSK_DES
                         {
 
                             string tekstZakodowany = "";
-                            Console.WriteLine("KODOWANIE");
+                            Console.WriteLine("DEKODOWANIE");
 
-                            Console.WriteLine("Podaj nazwę z rozszezenie do odczytu: ");
-                            string plikb = Console.ReadLine();
+                            string plikb, plikk;
+                            do {
+                                Console.Write("Plik szyfru: ");
+                                plikb = Console.ReadLine();
+                            } while (!File.Exists(plikb));
+                            
+
                             tekstZakodowany = FileHandler.ReadFromTextFile(plikb); //zm
 
-                            Console.WriteLine("Podaj plik txt do odczytu klucza: ");
-                            string plikk = Console.ReadLine();
+                            do {
+                                Console.Write("Plik klucza: ");
+                                plikk = Console.ReadLine();
+                            } while (!File.Exists(plikk));
+                            
+
                             string klucz = FileHandler.ReadFromTextFile1(plikk);
                             while (klucz.Length < 64) ///hmmm??
                             {
@@ -402,7 +407,7 @@ namespace BSK_DES
                             Console.WriteLine("KOD WYJSCIOWY: " + ostatnie);
                             Console.WriteLine("TEKST:" + wyjscie);
                             
-                            File.AppendAllText(@"d1.txt", wyjscie);
+                            File.WriteAllText(@"d1.txt", wyjscie);
 
                             break;
                         }
