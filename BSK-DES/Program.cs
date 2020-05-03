@@ -27,12 +27,23 @@ namespace BSK_DES
                         {
                             Console.WriteLine("KODOWANIE");
 
-                            Console.WriteLine("Podaj nazwę z rozszezenie do odczytu: ");
-                            string plikb = Console.ReadLine();
+                            string plikb, plikk;
+
+                            do {
+                                Console.WriteLine("Plik tekstu: ");
+                                plikb = Console.ReadLine();
+                            } while (!File.Exists(plikb));
+                            
                             string tekstJawny = FileHandler.ReadFromTextFile2(plikb);
 
-                            Console.WriteLine("Podaj plik txt do odczytu klucza: ");
-                            string plikk = Console.ReadLine();
+                            Console.WriteLine("");
+
+                            do {
+                                Console.WriteLine("plik klucza: ");
+                                plikk = Console.ReadLine();
+                            } while (!File.Exists(plikk));
+                            
+
                             string klucz = FileHandler.ReadFromTextFile1(plikk);
 
                             while (klucz.Length < 64) ///hmmm??
