@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace BSK_DES
 {
@@ -17,7 +18,13 @@ namespace BSK_DES
             text = AdjustStringTo64(text);
             return text;
         }
-
+        public static string ReadFromTextFile(string path)
+        {
+            string text = File.ReadAllText(path);
+            text = hex2binary(text);
+            // text = AdjustStringTo64(text);
+            return text;
+        }
         public static string ReadFromTextFile1(string path)
         {
             string text = File.ReadAllText(path);
@@ -123,9 +130,8 @@ namespace BSK_DES
 
         public static string hex2binary(string hexvalue)
         {
-            string binaryval = "";
-            binaryval = Convert.ToString(Convert.ToInt64(hexvalue, 16), 2);
-            return binaryval;
+            string binarystring = String.Join(String.Empty,hexvalue.Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0') ));
+            return binarystring;
         }
     }
 }
