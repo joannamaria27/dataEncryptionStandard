@@ -10,9 +10,15 @@ namespace BSK_DES
         {
 
             Console.WriteLine("halo!");
-            while(true)
+            while (true)
             {
-                Console.WriteLine("Menu\n 1-KODOWANIE\n 2-ODKODOWANIE\n --------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("Menu\n 1-KODOWANIE\n 2-ODKODOWANIE");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------");
 
                 int wybor = int.Parse(Console.ReadLine());
                 switch (wybor)
@@ -152,7 +158,7 @@ namespace BSK_DES
                                 Console.WriteLine("-----------------------------------------------");
                                 Console.Write("TEKST POCZATKOWY: ");
                                 Console.WriteLine(tablicaPoczatkowa);
-                                /////////////////////////////////////////
+
                                 /// 8-16. 
                                 char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
                                 char[,] ril1 = Des.Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
@@ -186,15 +192,15 @@ namespace BSK_DES
 
                                 char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
                                 string str = new string(koniecPer);
-                                Console.Write("TEKST WYJSCIOWY (BIN): " + str);
-
+                               // Console.Write("TEKST WYJSCIOWY (BIN): " + str);
+                                Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str, a+1);
                                 string wyjscie = FileHandler.BinaryToString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
-                                //File.WriteAllText(@"zakodowane.txt", wyjscie);
-                                File.AppendAllText(@"z.txt", wyjscie);
+
+                              //  File.AppendAllText(@"z.txt", wyjscie);
                                 string wyjscie1 = FileHandler.BinaryStringToHexString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie1);
-                                //File.WriteAllText(@"zakodowane.txt", wyjscie);
+
                                 File.AppendAllText(@"z1.txt", wyjscie1);
                             }
                             break;
@@ -212,7 +218,10 @@ namespace BSK_DES
                             Console.WriteLine("Podaj plik txt do odczytu klucza: ");
                             string plikk = Console.ReadLine();
                             string klucz = FileHandler.ReadFromTextFile1(plikk);
-
+                            while (klucz.Length < 64) ///hmmm??
+                            {
+                                klucz = "0" + klucz;
+                            }
                             char[] tablicaPoczatkowa = new char[64];
                             char[] tablicaPoczatkowaKlucz = new char[64];
                             string ostatnie = "";
@@ -329,7 +338,7 @@ namespace BSK_DES
                                 Console.WriteLine("-----------------------------------------------");
                                 Console.Write("TEKST POCZATKOWY: ");
                                 Console.Write(tablicaPoczatkowa);
-                                /////////////////////////////////////////
+
                                 /// 8-16. 
                                 char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 15);
                                 char[,] ril1 = Des.Laczenie(ril0, tablicaPermutacjiKlucza2, 14);
@@ -363,40 +372,27 @@ namespace BSK_DES
 
                                 char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
 
-                                //ostatnie = koniecPer;
-                                // string str = new string(koniecPer);
-                                // usuniecie nadmiaru
-
                                 string str1 = new string(koniecPer);
                                 ostatnie += str1;
 
-                                Console.Write("TEKST WYJSCIOWY (BIN): " + str1);
+                                Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str1,a+1);
 
                                 string wyjscie1 = FileHandler.BinaryToString(str1);
 
                                 Console.WriteLine("\n--------------------------------");
-                                File.AppendAllText(@"d.txt", wyjscie1);
-                                //File.WriteAllText(@"odkodowane.txt", wyjscie);
-
+                              //  File.AppendAllText(@"d.txt", wyjscie1);
                             }
-
-
-
+                            Console.WriteLine("--------------------------------");
+                            Console.WriteLine("KOD:           " + ostatnie);
                             string liczba = ostatnie.Substring(ostatnie.Length - 8, 8);
                             int licz = Convert.ToInt32(liczba, 2);
                             ostatnie = ostatnie.Remove(ostatnie.Length - (licz + 8));
                             string wyjscie = FileHandler.BinaryToString(ostatnie);
+                            Console.WriteLine("KOD WYJSCIOWY: " + ostatnie);
+                            Console.WriteLine("TEKST:" + wyjscie);
+                            
                             File.AppendAllText(@"d1.txt", wyjscie);
-                            /*           ;
-                                       string liczba = str.Substring(str.Length - 8, 8);
-                                       int licz = Convert.ToInt32(liczba, 2);
-                                       str = str.Remove(str.Length - (licz + 8));
 
-                                       Console.Write("TEKST WYJSCIOWY (BIN): " + str);
-
-                                       string wyjscie = FileHandler.BinaryStringToHexString(str);
-                                       Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
-                                       File.WriteAllText(@"odkodowane.txt", wyjscie);*/
                             break;
                         }
                 }

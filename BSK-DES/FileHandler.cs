@@ -8,9 +8,6 @@ namespace BSK_DES
 {
     class FileHandler
     {
-
-        // 0011000000110001001100100011001100110100001101010011011000110111 - 64 bits 01234567
-
         public static string ReadFromTextFile2(string path)  ///obsługa błędów kiedy zła nazwa + kiedy zła długosc klucza
         {
             string text = File.ReadAllText(path);
