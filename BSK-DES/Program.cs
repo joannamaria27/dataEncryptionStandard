@@ -8,9 +8,9 @@ namespace BSK_DES
     {
         static void Main(string[] args)
         {
-            int wybor = 0;
+            int wybor;
             Console.WriteLine("halo!");
-            while (wybor!=3)
+            while (true)
             {
                 Console.WriteLine("--------------------------------------------------");
                 Console.WriteLine("--------------------------------------------------");
@@ -20,7 +20,12 @@ namespace BSK_DES
                 Console.WriteLine("--------------------------------------------------");
                 Console.WriteLine("--------------------------------------------------");
 
-                wybor= int.Parse(Console.ReadLine());
+                string s = Console.ReadLine();
+
+                int.TryParse(s, out wybor);
+
+                if (wybor == null) continue;
+                //wybor= int.Parse(Console.ReadLine());
                 switch (wybor)
                 {
                     case 1:
