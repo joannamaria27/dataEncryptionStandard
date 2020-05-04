@@ -10,7 +10,7 @@ namespace BSK_DES
         {
             int wybor = 0;
             Console.WriteLine("halo!");
-            while (wybor!=3)
+            while (wybor != 3)
             {
                 Console.WriteLine("--------------------------------------------------");
                 Console.WriteLine("--------------------------------------------------");
@@ -20,7 +20,7 @@ namespace BSK_DES
                 Console.WriteLine("--------------------------------------------------");
                 Console.WriteLine("--------------------------------------------------");
 
-                wybor= int.Parse(Console.ReadLine());
+                wybor = int.Parse(Console.ReadLine());
                 switch (wybor)
                 {
                     case 1:
@@ -29,20 +29,22 @@ namespace BSK_DES
                             string ostatnie1 = "";
                             string plikb, plikk;
 
-                            do {
+                            do
+                            {
                                 Console.Write("Plik tekstu: ");
                                 plikb = Console.ReadLine();
                             } while (!File.Exists(plikb));
                             string tekstJawny = FileHandler.ReadFromTextFile2(plikb);
 
-                            do {
+                            do
+                            {
                                 Console.Write("plik klucza: ");
                                 plikk = Console.ReadLine();
                             } while (!File.Exists(plikk));
 
                             string klucz = FileHandler.ReadFromTextFile1(plikk);
 
-                            while (klucz.Length < 64) ///hmmm??
+                            while (klucz.Length < 64)
                             {
                                 klucz = "0" + klucz;
                             }
@@ -61,14 +63,13 @@ namespace BSK_DES
 
                                 }
 
-                                char[] tablicaPermutacji = Des.Permutacja(tablicaPoczatkowa, Des.ip); //2.
-                                char[] blokL = Des.Dzielenie(tablicaPermutacji, 32, 0); //3.
-                                char[] blokP = Des.Dzielenie(tablicaPermutacji, 32, 32); //3.
+                                char[] tablicaPermutacji = Des.Permutacja(tablicaPoczatkowa, Des.ip);
+                                char[] blokL = Des.Dzielenie(tablicaPermutacji, 32, 0);
+                                char[] blokP = Des.Dzielenie(tablicaPermutacji, 32, 32);
 
-                                //klucz 4 -7 
-                                char[] tablicaPermutacjiKlucza = Des.Permutacja(tablicaPoczatkowaKlucz, Des.pc); //4.
-                                char[] kluczC = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
-                                char[] kluczD = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
+                                char[] tablicaPermutacjiKlucza = Des.Permutacja(tablicaPoczatkowaKlucz, Des.pc);
+                                char[] kluczC = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 0);
+                                char[] kluczD = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 28);
 
                                 Console.Write("KLUCZ (BIN): ");
                                 foreach (char element in tablicaPoczatkowaKlucz)
@@ -90,7 +91,7 @@ namespace BSK_DES
                                 }
                                 Console.Write("\n");
                                 Console.WriteLine("-----------------------------------------------");
-                                //6.
+
                                 List<char> kluczC6 = new List<char>(kluczC);
                                 List<char> kluczD6 = new List<char>(kluczD);
                                 char[,] kluczeCpo6 = new char[16, 28];
@@ -126,7 +127,7 @@ namespace BSK_DES
                                     Console.Write("\n");
                                 }
                                 Console.WriteLine("-----------------------------------------------");
-                                //7.
+
                                 char[,] K = new char[16, 56];
                                 for (int i = 0; i < 16; i++)
                                 {
@@ -141,7 +142,6 @@ namespace BSK_DES
 
                                     }
                                 }
-
 
                                 int pomocnicza = 0;
                                 char[,] tablicaPermutacjiKlucza2 = new char[16, 48];
@@ -166,7 +166,6 @@ namespace BSK_DES
                                 Console.Write("TEKST POCZATKOWY: ");
                                 Console.WriteLine(tablicaPoczatkowa);
 
-                                /// 8-16. 
                                 char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 0);
                                 char[,] ril1 = Des.Laczenie(ril0, tablicaPermutacjiKlucza2, 1);
                                 char[,] ril2 = Des.Laczenie(ril1, tablicaPermutacjiKlucza2, 2);
@@ -184,8 +183,6 @@ namespace BSK_DES
                                 char[,] ril14 = Des.Laczenie(ril13, tablicaPermutacjiKlucza2, 14);
                                 char[,] ril15 = Des.Laczenie(ril14, tablicaPermutacjiKlucza2, 15);
 
-
-                                //17.
                                 char[] koniec = new char[64];
                                 for (int i = 0; i < 32; i++)
                                 {
@@ -197,52 +194,48 @@ namespace BSK_DES
                                     koniec[d++] = ril15[1, i];
                                 }
 
-                                char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1); //18.
+                                char[] koniecPer = Des.Permutacja(koniec, Des.IP1minus1);
 
                                 string str = new string(koniecPer);
                                 ostatnie1 += str;
-                                // Console.Write("TEKST WYJSCIOWY (BIN): " + str);
-                                Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str, a+1);
+                                Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str, a + 1);
                                 string wyjscie = FileHandler.BinaryToString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
 
-                               // File.AppendAllText(@"z.txt", wyjscie);
+                                //File.AppendAllText(@"z.txt", wyjscie);
                                 string wyjscie1 = FileHandler.BinaryStringToHexString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie1);
 
                                 File.AppendAllText(@"z1.txt", wyjscie1);
                             }
                             Console.WriteLine("--------------------------------");
-                            
+
                             Console.WriteLine("TEKST ZAKODOWANY: " + ostatnie1);
                             string wyjscie2 = FileHandler.BinaryStringToHexString(ostatnie1);
                             Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie2);
-
                             break;
                         }
                     case 2:
                         {
-
                             string tekstZakodowany = "";
                             Console.WriteLine("DEKODOWANIE");
 
                             string plikb, plikk;
-                            do {
+                            do
+                            {
                                 Console.Write("Plik szyfru: ");
                                 plikb = Console.ReadLine();
                             } while (!File.Exists(plikb));
-                            
 
                             tekstZakodowany = FileHandler.ReadFromTextFile(plikb); //zm
-
-                            do {
+                            do
+                            {
                                 Console.Write("Plik klucza: ");
                                 plikk = Console.ReadLine();
                             } while (!File.Exists(plikk));
-                            
 
                             string klucz = FileHandler.ReadFromTextFile1(plikk);
-                            while (klucz.Length < 64) ///hmmm??
+                            while (klucz.Length < 64)
                             {
                                 klucz = "0" + klucz;
                             }
@@ -264,7 +257,6 @@ namespace BSK_DES
                                 char[] blokL = Des.Dzielenie(tablicaPermutacji, 32, 0); //3.
                                 char[] blokP = Des.Dzielenie(tablicaPermutacji, 32, 32); //3.
 
-                                //klucz 4 -7 
                                 char[] tablicaPermutacjiKlucza = Des.Permutacja(tablicaPoczatkowaKlucz, Des.pc); //4.
                                 char[] kluczC = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 0); //5.
                                 char[] kluczD = Des.Dzielenie(tablicaPermutacjiKlucza, 28, 28); //5.
@@ -288,7 +280,7 @@ namespace BSK_DES
                                 }
                                 Console.Write("\n");
                                 Console.WriteLine("-----------------------------------------------");
-                                //6.
+
                                 List<char> kluczC6 = new List<char>(kluczC);
                                 List<char> kluczD6 = new List<char>(kluczD);
                                 char[,] kluczeCpo6 = new char[16, 28];
@@ -324,19 +316,17 @@ namespace BSK_DES
                                     Console.Write("\n");
                                 }
                                 Console.WriteLine("-----------------------------------------------");
-                                //7.
+
                                 char[,] K = new char[16, 56];
                                 for (int i = 0; i < 16; i++)
                                 {
                                     for (int j = 0; j < 28; j++)
                                     {
                                         K[i, j] = kluczeCpo6[i, j];
-
                                     }
                                     for (int j = 28, k = 0; j < 56; j++, k++)
                                     {
                                         K[i, j] = kluczeDpo6[i, k];
-
                                     }
                                 }
 
@@ -363,7 +353,6 @@ namespace BSK_DES
                                 Console.Write("TEKST POCZATKOWY: ");
                                 Console.Write(tablicaPoczatkowa);
 
-                                /// 8-16. 
                                 char[,] ril0 = Des.RiL(blokP, blokL, tablicaPermutacjiKlucza2, 15);
                                 char[,] ril1 = Des.Laczenie(ril0, tablicaPermutacjiKlucza2, 14);
                                 char[,] ril2 = Des.Laczenie(ril1, tablicaPermutacjiKlucza2, 13);
@@ -381,8 +370,6 @@ namespace BSK_DES
                                 char[,] ril14 = Des.Laczenie(ril13, tablicaPermutacjiKlucza2, 1);
                                 char[,] ril15 = Des.Laczenie(ril14, tablicaPermutacjiKlucza2, 0);
 
-
-                                //17.
                                 char[] koniec = new char[64];
                                 for (int i = 0; i < 32; i++)
                                 {
@@ -399,18 +386,18 @@ namespace BSK_DES
                                 string str1 = new string(koniecPer);
                                 ostatnie += str1;
 
-                                Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str1,a+1);
+                                Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str1, a + 1);
 
                                 string wyjscie1 = FileHandler.BinaryToString(str1);
 
                                 Console.WriteLine("\n--------------------------------");
-                              //  File.AppendAllText(@"d.txt", wyjscie1);
+                                // File.AppendAllText(@"d.txt", wyjscie1);
                             }
                             Console.WriteLine("--------------------------------");
                             Console.WriteLine("KOD:           " + ostatnie);
                             string liczba = ostatnie.Substring(ostatnie.Length - 8, 8);
-                            
-                            
+
+
                             int licz = int.Parse(FileHandler.BinaryToString(liczba));
 
 
@@ -419,9 +406,8 @@ namespace BSK_DES
                             string wyjscie = FileHandler.BinaryToString(ostatnie);
                             Console.WriteLine("KOD WYJSCIOWY: " + ostatnie);
                             Console.WriteLine("TEKST:" + wyjscie);
-                            
-                            File.WriteAllText(@"d1.txt", wyjscie);
 
+                            File.WriteAllText(@"d1.txt", wyjscie);
                             break;
                         }
                     default:

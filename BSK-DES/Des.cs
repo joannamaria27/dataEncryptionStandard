@@ -25,15 +25,10 @@ namespace BSK_DES
             for (int i = 0; i < tablicaK.Length; i++)
             {
                 if (tablicaK[i] == tablicaR[i])
-                {
                     XOR[i] = '0';
-                }
                 else
-                {
                     XOR[i] = '1';
-                }
             }
-
             return XOR;
         }
 
@@ -137,20 +132,18 @@ namespace BSK_DES
             for (int i = 0; i < rozmiar; i++)
             {
                 blok[i] = tablica[l]; l++;
-
             }
-
             return blok;
         }
 
         public static char[] Odczytywanie(int n, char[,] S, int[,] S1)
         {
             char[] blok4bit = new char[4];
-            string wiersz = S[n, 0] + "" + S[n, 5]; //11.
-            string kolumna = S[n, 1] + "" + S[n, 2] + "" + S[n, 3] + "" + S[n, 4]; //11.
-            int w = Convert.ToInt32(wiersz, 2); //11.
-            int k = Convert.ToInt32(kolumna, 2); //11.
-            string l = Convert.ToString(S1[w, k], 2);  //12.
+            string wiersz = S[n, 0] + "" + S[n, 5]; 
+            string kolumna = S[n, 1] + "" + S[n, 2] + "" + S[n, 3] + "" + S[n, 4]; 
+            int w = Convert.ToInt32(wiersz, 2); 
+            int k = Convert.ToInt32(kolumna, 2);
+            string l = Convert.ToString(S1[w, k], 2); 
             while (l.Length < 4)
             {
                 l = "0" + l;
@@ -163,13 +156,14 @@ namespace BSK_DES
         public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2, int numer)
         {
             char[,] rl = new char[2, 32];
-            char[] blokR8 = Des.Permutacja(blokR, Des.E); //8.
-                                                          //9. xor Kn, Rn-1
+            char[] blokR8 = Des.Permutacja(blokR, Des.E); 
+                                                          
             char[] tablicaK = new char[48];
             for (int i = 0; i < 48; i++)
             {
                 tablicaK[i] = tablicaPermutacjiKlucza2[numer, i];
             }
+            
             char[] tablicaXOR = Des.Xorowanie(tablicaK, blokR8);
             Console.WriteLine("-----------------------------------------------");
             Console.Write("BLOK R: ");
@@ -194,14 +188,24 @@ namespace BSK_DES
                     S[i, j] = tablicaXOR[p]; p++;
                 }
             }
-            Console.Write("XOROWANIE: ");
+            Console.Write("KLUCZ: ");
+            foreach (char element in tablicaK)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\nBLOK R: ");
+            foreach (char element in blokR8)
+            {
+                Console.Write(element);
+            }
+            Console.Write("\nXOROWANIE: ");
             foreach (char element in tablicaXOR)
             {
                 Console.Write(element);
             }
             Console.Write("\n");
 
-            char[] ciag6bit1 = Des.Odczytywanie(0, S, Des.S1); //11-12.
+            char[] ciag6bit1 = Des.Odczytywanie(0, S, Des.S1);
             char[] ciag6bit2 = Des.Odczytywanie(1, S, Des.S2);
             char[] ciag6bit3 = Des.Odczytywanie(2, S, Des.S3);
             char[] ciag6bit4 = Des.Odczytywanie(3, S, Des.S4);
@@ -260,8 +264,6 @@ namespace BSK_DES
             Console.Write("\n");
 
 
-
-            //13.
             char[] ciagR = new char[32];
             int r = 0;
             foreach (char i in ciag6bit1)
@@ -303,29 +305,28 @@ namespace BSK_DES
                 Console.Write(element);
             }
             Console.Write("\n");
-            char[] RPermutacja = Des.Permutacja(ciagR, Des.P); //14.
+            char[] RPermutacja = Des.Permutacja(ciagR, Des.P);
             Console.Write("R PO PERMUTACJI: ");
             foreach (char element in RPermutacja)
             {
                 Console.Write(element);
             }
             Console.Write("\n");
-            //xor Ln-1 Rn-1
-            char[] blokRn = Des.Xorowanie(RPermutacja, blokL); //15.
+         
+            char[] blokRn = Des.Xorowanie(RPermutacja, blokL);
             Console.Write("XOROWANIE: ");
             foreach (char element in blokRn)
             {
                 Console.Write(element);
             }
             Console.Write("\n");
-            char[] blokLn = blokR; //16.
+            char[] blokLn = blokR;
 
             for (int i = 0; i < 32; i++)
             {
                 rl[0, i] = blokRn[i];
                 rl[1, i] = blokLn[i];
             }
-
             Console.WriteLine("-----------------------------------------------");
             return rl;
         }
@@ -341,8 +342,5 @@ namespace BSK_DES
             char[,] riln = RiL(blokLn, blokRn, tablicaPermutacjiKlucza2, numer);
             return riln;
         }
-
-
-
     }
 }
