@@ -139,11 +139,11 @@ namespace BSK_DES
         public static char[] Odczytywanie(int n, char[,] S, int[,] S1)
         {
             char[] blok4bit = new char[4];
-            string wiersz = S[n, 0] + "" + S[n, 5]; 
-            string kolumna = S[n, 1] + "" + S[n, 2] + "" + S[n, 3] + "" + S[n, 4]; 
-            int w = Convert.ToInt32(wiersz, 2); 
+            string wiersz = S[n, 0] + "" + S[n, 5];
+            string kolumna = S[n, 1] + "" + S[n, 2] + "" + S[n, 3] + "" + S[n, 4];
+            int w = Convert.ToInt32(wiersz, 2);
             int k = Convert.ToInt32(kolumna, 2);
-            string l = Convert.ToString(S1[w, k], 2); 
+            string l = Convert.ToString(S1[w, k], 2);
             while (l.Length < 4)
             {
                 l = "0" + l;
@@ -156,29 +156,25 @@ namespace BSK_DES
         public static char[,] RiL(char[] blokR, char[] blokL, char[,] tablicaPermutacjiKlucza2, int numer)
         {
             char[,] rl = new char[2, 32];
-            char[] blokR8 = Des.Permutacja(blokR, Des.E); 
-                                                          
+            char[] blokR8 = Des.Permutacja(blokR, Des.E);
+
             char[] tablicaK = new char[48];
             for (int i = 0; i < 48; i++)
             {
                 tablicaK[i] = tablicaPermutacjiKlucza2[numer, i];
             }
-            
+
             char[] tablicaXOR = Des.Xorowanie(tablicaK, blokR8);
             Console.WriteLine("-----------------------------------------------");
             Console.Write("BLOK R: ");
             foreach (char element in blokR)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write("BLOK L: ");
             foreach (char element in blokL)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
-            //10.
+
             int p = 0;
             char[,] S = new char[8, 6];
             for (int i = 0; i < 8; i++)
@@ -190,19 +186,13 @@ namespace BSK_DES
             }
             Console.Write("KLUCZ: ");
             foreach (char element in tablicaK)
-            {
                 Console.Write(element);
-            }
             Console.Write("\nBLOK R: ");
             foreach (char element in blokR8)
-            {
                 Console.Write(element);
-            }
             Console.Write("\nXOROWANIE: ");
             foreach (char element in tablicaXOR)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
 
             char[] ciag6bit1 = Des.Odczytywanie(0, S, Des.S1);
@@ -216,51 +206,35 @@ namespace BSK_DES
 
             Console.Write(" CIĄG 1: ");
             foreach (char element in ciag6bit1)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 2: ");
             foreach (char element in ciag6bit2)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 3: ");
             foreach (char element in ciag6bit3)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 4: ");
             foreach (char element in ciag6bit4)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 5: ");
             foreach (char element in ciag6bit5)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 6: ");
             foreach (char element in ciag6bit6)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 7: ");
             foreach (char element in ciag6bit7)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             Console.Write(" CIĄG 8: ");
             foreach (char element in ciag6bit8)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
 
 
@@ -301,24 +275,18 @@ namespace BSK_DES
 
             Console.Write("NOWE R: ");
             foreach (char element in ciagR)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             char[] RPermutacja = Des.Permutacja(ciagR, Des.P);
             Console.Write("R PO PERMUTACJI: ");
             foreach (char element in RPermutacja)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
-         
+
             char[] blokRn = Des.Xorowanie(RPermutacja, blokL);
             Console.Write("XOROWANIE: ");
             foreach (char element in blokRn)
-            {
                 Console.Write(element);
-            }
             Console.Write("\n");
             char[] blokLn = blokR;
 
