@@ -273,22 +273,23 @@ namespace BSK_DES
                 ciagR[r++] = i;
             }
 
+            char[] RPermutacja = Des.Permutacja(ciagR, Des.P);
+
+            char[] blokRn = Des.Xorowanie(RPermutacja, blokL);
+            char[] blokLn = blokR;
+
             Console.Write("NOWE R: ");
             foreach (char element in ciagR)
                 Console.Write(element);
             Console.Write("\n");
-            char[] RPermutacja = Des.Permutacja(ciagR, Des.P);
             Console.Write("R PO PERMUTACJI: ");
             foreach (char element in RPermutacja)
                 Console.Write(element);
             Console.Write("\n");
-
-            char[] blokRn = Des.Xorowanie(RPermutacja, blokL);
             Console.Write("XOROWANIE: ");
             foreach (char element in blokRn)
                 Console.Write(element);
             Console.Write("\n");
-            char[] blokLn = blokR;
 
             for (int i = 0; i < 32; i++)
             {

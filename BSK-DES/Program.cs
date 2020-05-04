@@ -78,22 +78,15 @@ namespace BSK_DES
 
                                 Console.Write("KLUCZ (BIN): ");
                                 foreach (char element in tablicaPoczatkowaKlucz)
-                                {
                                     Console.Write(element);
-                                }
-                                Console.Write("\n");
-                                Console.Write("KLUCZ C: ");
-                                foreach (char element in kluczC)
-                                {
-                                    Console.Write(element);
-                                }
-                                Console.Write("\n");
 
-                                Console.Write("KLUCZ D: ");
-                                foreach (char element in kluczD)
-                                {
+                                Console.Write("\nKLUCZ C: ");
+                                foreach (char element in kluczC)
                                     Console.Write(element);
-                                }
+
+                                Console.Write("\nKLUCZ D: ");
+                                foreach (char element in kluczD)
+                                    Console.Write(element);
                                 Console.Write("\n");
                                 Console.WriteLine("-----------------------------------------------");
 
@@ -206,15 +199,12 @@ namespace BSK_DES
                                 Console.Write("TEKST WYJSCIOWY {0} (BIN): " + str, a + 1);
                                 string wyjscie = FileHandler.BinaryToString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie);
-
-                                //File.AppendAllText(@"z.txt", wyjscie);
+                                File.AppendAllText(@"z.txt", wyjscie);
                                 string wyjscie1 = FileHandler.BinaryStringToHexString(str);
                                 Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie1);
-
                                 File.AppendAllText(@"z1.txt", wyjscie1);
                             }
                             Console.WriteLine("--------------------------------");
-
                             Console.WriteLine("TEKST ZAKODOWANY: " + ostatnie1);
                             string wyjscie2 = FileHandler.BinaryStringToHexString(ostatnie1);
                             Console.WriteLine("\nTEKST WYJSCIOWY: " + wyjscie2);
@@ -396,17 +386,12 @@ namespace BSK_DES
                                 string wyjscie1 = FileHandler.BinaryToString(str1);
 
                                 Console.WriteLine("\n--------------------------------");
-                                // File.AppendAllText(@"d.txt", wyjscie1);
+                                File.AppendAllText(@"d.txt", wyjscie1);
                             }
                             Console.WriteLine("--------------------------------");
                             Console.WriteLine("KOD:           " + ostatnie);
                             string liczba = ostatnie.Substring(ostatnie.Length - 8, 8);
-
-
                             int licz = int.Parse(FileHandler.BinaryToString(liczba));
-
-
-
                             ostatnie = ostatnie.Remove(ostatnie.Length - (licz * 8));
                             string wyjscie = FileHandler.BinaryToString(ostatnie);
                             Console.WriteLine("KOD WYJSCIOWY: " + ostatnie);
